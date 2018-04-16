@@ -3,67 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>文件列表</title>
-    <link rel="stylesheet" type="text/css" href="/template/css/bootstrap.min.css">
-    <script type="text/javascript" src="/template/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/template/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/template/css/bootstrap.min.css">
+    <script src="/template/js/jquery.min.js"></script>
+    <script src="/template/js/bootstrap.min.js"></script>
 </head>
 <body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">文件管理工具</a>
+        </div>
 
-{{/*<div style="display: none">*/}}
-    {{/*<input id="login_user_right" type="text" value=""/>*/}}
-{{/*</div>*/}}
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-{{/*<nav class="navbar navbar-default">*/}}
-    {{/*<div class="container-fluid">*/}}
-        {{/*<div class="navbar-header">*/}}
-            {{/*<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"*/}}
-                    {{/*data-target="#bs-example-navbar-collapse-1" aria-expanded="false">*/}}
-                {{/*<span class="sr-only">Toggle navigation</span>*/}}
-                {{/*<span class="icon-bar"></span>*/}}
-                {{/*<span class="icon-bar"></span>*/}}
-                {{/*<span class="icon-bar"></span>*/}}
-            {{/*</button>*/}}
-        {{/*</div>*/}}
-        {{/*<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">*/}}
-            {{/*<ul class="nav navbar-nav">*/}}
-                {{/*<li id="menu_data_statistic" class="dropdown">*/}}
-                    {{/*<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"*/}}
-                       {{/*aria-expanded="false">数据统计<span class="caret"></span></a>*/}}
-                    {{/*<ul class="dropdown-menu">*/}}
-                        {{/*<li><a href="#" id="nav_hive_ref_a">hive统计</a></li>*/}}
-                        {{/*<li role="separator" class="divider"></li>*/}}
-                        {{/*<li class="disabled"><a href="#">redis统计</a></li>*/}}
-                    {{/*</ul>*/}}
-                {{/*</li>*/}}
-            {{/*</ul>*/}}
-            {{/*<ul class="nav navbar-nav navbar-right">*/}}
-                {{/*<li><a id="login_user" href="#"></a></li>*/}}
-                {{/*<li><a id="logout_user" href="/logout">退出</a></li>*/}}
-            {{/*</ul>*/}}
-        {{/*</div>*/}}
-    {{/*</div>*/}}
-{{/*</nav>*/}}
+            {{if .IsLogin}}
+            <ul class="nav navbar-nav">
+                <li><a href="#">上传</a></li>
+            </ul>
 
-{{/*<div class="container" style="width: 100%">*/}}
-    {{/*<div class="container-fluid">*/}}
-        {{/*<div class="row-fluid">*/}}
-            {{/*<div class="span3">*/}}
-                {{/*<div class="container-fluid">*/}}
-                    {{/*<div class="row">*/}}
-                        {{/*<div id="left_frame_col" class="col-xs-2" style="background-color: #f6f6f6">*/}}
-                            {{/*<ul id="main-nav" class="nav nav-tabs nav-stacked" style="">*/}}
-                            {{/*</ul>*/}}
-                        {{/*</div>*/}}
-                        {{/*<div id="right_frame_col" class="col-xs-10">*/}}
-                            {{/*<iframe id="right_frame" frameBorder="0" height="100%" width="100%"*/}}
-                                    {{/*src=""></iframe>*/}}
-                        {{/*</div>*/}}
-                    {{/*</div>*/}}
-                {{/*</div>*/}}
-            {{/*</div>*/}}
-        {{/*</div>*/}}
-    {{/*</div>*/}}
-{{/*</div>*/}}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">{{.LoginName}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    <li><a href="#">更改密码</a></li>
+                    <li><a href="#">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {{else}}
 
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">游客<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+            {{end}}
+
+            <form class="navbar-form navbar-right" style="width: 400px">
+                <div class="form-group"  style="width: 80%">
+                    <input type="text" class="form-control" placeholder="搜索文件名" style="width: 100%">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
 </body>
 </html>

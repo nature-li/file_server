@@ -50,12 +50,12 @@ func delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, "/Users/liyanguo/tmp/http_server/logs", "server", 100*1024*1024, -1)
+	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, "./logs", "server", 100*1024*1024, -1)
 	if !logger.Start() {
 		fmt.Println("logger.Start failed")
 	}
 
-	fs := http.FileServer(http.Dir("/Users/liyanguo/code/GoglandProjects/http_server/template"))
+	fs := http.FileServer(http.Dir("./template"))
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
 
 	http.HandleFunc("/", indexHandler)
