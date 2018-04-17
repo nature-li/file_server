@@ -13,13 +13,16 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="/template/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/template/css/bootstrap-dialog/bootstrap-dialog.min.css">
 
     <!-- Custom CSS -->
     <link href="/template/css/left/simple-sidebar.css" rel="stylesheet">
     <link href="/template/css/left/align.css" rel="stylesheet">
 
-    <style type="text/css">
-    </style>
+    <!-- Bootstrap Core JS -->
+    <script src="/template/js/jquery.js"></script>
+    <script src="/template/js/bootstrap.min.js"></script>
+    <script src="/template/js/bootstrap-dialog/bootstrap-dialog.min.js"></script>
 </head>
 
 <body>
@@ -144,50 +147,14 @@
 <!-- /#wrapper -->
 
 <!-- jQuery -->
-<script src="/template/js/jquery.js"></script>
+
 
 <!-- Bootstrap Core JavaScript -->
-<script src="/template/js/bootstrap.min.js"></script>
-
 <script src="/template/js/pages/public.js"></script>
 <script src="/template/js/pages/page_partition.js"></script>
-<script src="/template/js/pages/file_list.js"></script>
+<script src="/template/js/pages/file_list_page.js"></script>
 
 <!-- Menu Toggle Script -->
-<script>
-    $(document).ready(function () {
-        save_data_and_update_page_view(data);
-
-        var html = "";
-        html += "<tr><td>" + "1" + "</td>" +
-                "<td>" + "x.html" + "</td>" +
-                "<td>" + "0.23" + "</td>" +
-                "<td>" + "12345" + "</td>" +
-                "<td>" + "lyg@meitu.com" + "</td>" +
-                "<td>" + "2018-08-08" + "</td>" +
-                "<td>" + "no desc" + "</td></tr>";
-        html += "<tr><td>" + "1" + "</td>" +
-                "<td>" + "x.html" + "</td>" +
-                "<td>" + "0.23" + "</td>" +
-                "<td>" + "12345" + "</td>" +
-                "<td>" + "lyg@meitu.com" + "</td>" +
-                "<td>" + "2018-08-08" + "</td>" +
-                "<td>" + "no desc" + "</td></tr>";
-        html += "<tr><td>" + "1" + "</td>" +
-                "<td>" + "x.html" + "</td>" +
-                "<td>" + "0.23" + "</td>" +
-                "<td>" + "12345" + "</td>" +
-                "<td>" + "lyg@meitu.com" + "</td>" +
-                "<td>" + "2018-08-08" + "</td>" +
-                "<td>" + "no desc" + "</td></tr>";
-        $("#file_list_result").find("tr:gt(0)").remove();
-        $("#file_list_result").append(html);
-    });
-
-    var $partition = $("#page_partition_id");
-    $partition.append('<li class="hive-page-next"><a>下一页</a></li>');
-</script>
-
 </body>
 
 </html>

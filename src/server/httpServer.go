@@ -61,6 +61,7 @@ func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)
+	http.HandleFunc("/query_file_list", queryFileListHandler)
 
 	err := http.ListenAndServe(":12345", nil)
 	if err != nil {
