@@ -59,6 +59,8 @@ func main() {
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
 
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/test", testHandler)
+	http.HandleFunc("/learn", learnHandler)
 
 	err := http.ListenAndServe(":12345", nil)
 	if err != nil {

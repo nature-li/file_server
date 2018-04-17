@@ -36,6 +36,24 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, data)
 }
 
+func testHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("template/html/test.html")
+	if err != nil {
+		logger.Error(err.Error())
+	}
+	data := IndexPageData{IsLogin:true, LoginName:"lyg"}
+	t.Execute(w, data)
+}
+
+func learnHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("template/html/learn.html")
+	if err != nil {
+		logger.Error(err.Error())
+	}
+	data := IndexPageData{IsLogin:true, LoginName:"lyg"}
+	t.Execute(w, data)
+}
+
 func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	url := "https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz"
 
