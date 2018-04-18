@@ -117,12 +117,21 @@ function isLock() {
     return "glyphicon-pushpin";
 }
 
+// 是否隐藏扩展按钮
+function isHiddenExpend() {
+    if (isToggle()) {
+        return "hidden-self";
+    }
+
+    return "";
+}
+
 // 点击文件列表
 $("#file_list_menu").click(function (e) {
     // $(".side-bar-menu").removeClass("chosen-menu");
     // $("#file_list_menu").addClass("chosen-menu");
 
-    window.parent.location.replace("/list_file?toggle=" + isToggle() + "&lock=" + isLock());
+    window.parent.location.replace("/list_file?toggle=" + isToggle() + "&lock=" + isLock() + "&hidden=" + isHiddenExpend());
 });
 
 // 点击上传文件
@@ -130,7 +139,7 @@ $("#upload_file_menu").click(function (e) {
     // $(".side-bar-menu").removeClass("chosen-menu");
     // $("#upload_file_menu").addClass("chosen-menu");
 
-    window.parent.location.replace("/upload_file?toggle=" + isToggle() + "&lock=" + isLock());
+    window.parent.location.replace("/upload_file?toggle=" + isToggle() + "&lock=" + isLock() + "&hidden=" + isHiddenExpend());
 });
 
 // 点击下载文件

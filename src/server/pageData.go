@@ -5,4 +5,5 @@ type pageData struct {
 	LoginName string
 	WrapperClass string
 	PinLock string
+	HiddenClass string
 }
