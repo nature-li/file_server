@@ -12,13 +12,16 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="/template/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/template/css/bootstrap-dialog/bootstrap-dialog.min.css">
 
     <!-- Custom CSS -->
     <link href="/template/css/left/simple-sidebar.css" rel="stylesheet">
     <link href="/template/css/left/align.css" rel="stylesheet">
 
-    <style type="text/css">
-    </style>
+    <!-- Bootstrap Core JS -->
+    <script src="/template/js/jquery.js"></script>
+    <script src="/template/js/bootstrap.min.js"></script>
+    <script src="/template/js/bootstrap-dialog/bootstrap-dialog.min.js"></script>
 </head>
 
 <body>
@@ -37,22 +40,22 @@
                 </span>
                 <span style="float: right">
                     <a href="#">
-                        <span id="lock-side-bar" class="glyphicon glyphicon-triangle-left" style="margin-right: 20px"
+                        <span id="lock-side-bar" class="glyphicon glyphicon-pushpin" style="margin-right: 20px"
                               aria-hidden="true">
                         </span>
                     </a>
                 </span>
             </li>
-            <li id="file_list" class="side-bar-condition-hidden side-bar-menu chosen-menu" style="clear: both">
-                <a href="#">文件列表</a>
+            <li id="file_list_menu" class="side-bar-condition-hidden side-bar-menu chosen-menu" style="clear: both">
+                <a href="/index">文件列表</a>
             </li>
-            <li id="upload_file" class="side-bar-condition-hidden side-bar-menu">
-                <a href="#">上传文件</a>
+            <li id="upload_file_menu" class="side-bar-condition-hidden side-bar-menu">
+                <a href="/learn">上传文件</a>
             </li>
-            <li id="download_file" class="side-bar-condition-hidden side-bar-menu">
+            <li id="download_file_menu" class="side-bar-condition-hidden side-bar-menu">
                 <a href="#">下载文件</a>
             </li>
-            <li id="other_function" class="side-bar-condition-hidden side-bar-menu">
+            <li id="other_function_menu" class="side-bar-condition-hidden side-bar-menu">
                 <a href="#">其它功能</a>
             </li>
         </ul>
@@ -82,8 +85,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">游客<span class="caret"></span>
-                        </a>
+                           aria-expanded="false">游客<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">登录</a></li>
                         </ul>
@@ -104,107 +106,54 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>Simple Sidebar</h1>
-                    <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller
-                        screens, and will appear non-collapsed on larger screens. When toggled using the button below,
-                        the menu will appear/disappear. On small screens, the page content will be pushed off
-                        canvas.</p>
-                    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                    <table id="file_list_result" class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>文件名</th>
+                            <th>版本号</th>
+                            <th>md5</th>
+                            <th>上传者</th>
+                            <th>上传时间</th>
+                            <th>描述</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div style="text-align: right">
+                            <span id="data_count_tip" style="margin-right: 15px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div style="text-align: right">
+                            <ul id="page_partition_id" class="pagination"></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- /#page-content-wrapper -->
-
 </div>
 <!-- /#wrapper -->
 
 <!-- jQuery -->
-<script src="/template/js/jquery.js"></script>
+
 
 <!-- Bootstrap Core JavaScript -->
-<script src="/template/js/bootstrap.min.js"></script>
+<script src="/template/js/pages/public.js"></script>
+<script src="/template/js/pages/page_partition.js"></script>
+<script src="/template/js/pages/file_list_page.js"></script>
 
 <!-- Menu Toggle Script -->
-<script>
-    function unlock_pin() {
-        $("#lock-side-bar").removeClass("glyphicon-triangle-bottom");
-        $("#lock-side-bar").addClass("glyphicon-triangle-left");
-    }
-
-    function lock_pin() {
-        $("#lock-side-bar").removeClass("glyphicon-triangle-left");
-        $("#lock-side-bar").addClass("glyphicon-triangle-bottom");
-    }
-
-    $(".side-bar-hidden").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").removeClass("toggled");
-        $("#expand-side-bar").removeClass("hidden-self");
-        unlock_pin();
-    });
-
-    $(".side-bar-condition-hidden").click(function (e) {
-        if ($("#lock-side-bar").hasClass("glyphicon-triangle-left")) {
-            e.preventDefault();
-            $("#wrapper").removeClass("toggled");
-            $("#expand-side-bar").removeClass("hidden-self");
-            unlock_pin();
-        }
-    });
-
-    $(".side-bar-show").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").addClass("toggled");
-        $("#expand-side-bar").addClass("hidden-self");
-    });
-
-    $("#lock-side-bar").click(function (e) {
-        e.preventDefault();
-        if ($("#lock-side-bar").hasClass("glyphicon-triangle-left")) {
-            lock_pin();
-        } else {
-            unlock_pin();
-        }
-    });
-
-    $(document).click(function (event) {
-        event.preventDefault();
-        if ($("#lock-side-bar").hasClass("glyphicon-triangle-left")) {
-            if (!$(event.target).closest("#sidebar-wrapper, #expand-side-bar").length) {
-                if ($("#wrapper").hasClass("toggled")) {
-                    $("#wrapper").removeClass("toggled");
-                    $("#expand-side-bar").removeClass("hidden-self");
-                }
-            }
-        }
-    });
-
-    $("#file_list").click(function (e) {
-        e.preventDefault();
-        $(".side-bar-menu").removeClass("chosen-menu");
-        $("#file_list").addClass("chosen-menu");
-    });
-
-    $("#upload_file").click(function (e) {
-        e.preventDefault();
-        $(".side-bar-menu").removeClass("chosen-menu");
-        $("#upload_file").addClass("chosen-menu");
-    });
-
-    $("#download_file").click(function (e) {
-        e.preventDefault();
-        $(".side-bar-menu").removeClass("chosen-menu");
-        $("#download_file").addClass("chosen-menu");
-    });
-
-    $("#other_function").click(function (e) {
-        e.preventDefault();
-        $(".side-bar-menu").removeClass("chosen-menu");
-        $("#other_function").addClass("chosen-menu");
-    });
-</script>
-
 </body>
 
 </html>

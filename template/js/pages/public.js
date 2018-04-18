@@ -57,7 +57,6 @@ function lock_pin() {
 
 // 隐藏侧边栏
 $(".side-bar-hidden").click(function (e) {
-    e.preventDefault();
     $("#wrapper").removeClass("toggled");
     $("#expand-side-bar").removeClass("hidden-self");
 });
@@ -65,7 +64,6 @@ $(".side-bar-hidden").click(function (e) {
 // 隐藏侧边栏
 $(".side-bar-condition-hidden").click(function (e) {
     if ($("#lock-side-bar").hasClass("glyphicon-pushpin")) {
-        e.preventDefault();
         $("#wrapper").removeClass("toggled");
         $("#expand-side-bar").removeClass("hidden-self");
     }
@@ -73,7 +71,6 @@ $(".side-bar-condition-hidden").click(function (e) {
 
 // 展示侧边栏
 $(".side-bar-show").click(function (e) {
-    e.preventDefault();
     unlock_pin();
     $("#wrapper").addClass("toggled");
     $("#expand-side-bar").addClass("hidden-self");
@@ -81,7 +78,6 @@ $(".side-bar-show").click(function (e) {
 
 // 加/解锁侧边栏
 $("#lock-side-bar").click(function (e) {
-    e.preventDefault();
     if ($("#lock-side-bar").hasClass("glyphicon-pushpin")) {
         lock_pin();
     } else {
@@ -91,7 +87,6 @@ $("#lock-side-bar").click(function (e) {
 
 // 加/解锁侧边栏
 $(document).click(function (event) {
-    event.preventDefault();
     if ($("#lock-side-bar").hasClass("glyphicon-pushpin")) {
         if (!$(event.target).closest("#sidebar-wrapper, #expand-side-bar").length) {
             if ($("#wrapper").hasClass("toggled")) {
@@ -102,30 +97,50 @@ $(document).click(function (event) {
     }
 });
 
+// 是否toggle
+function isToggle() {
+    if ($("#wrapper").hasClass("toggled")) {
+        if (isLock()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// 是否lock
+function isLock() {
+    if ($("#lock-side-bar").hasClass("glyphicon-lock")) {
+        return true;
+    }
+
+    return false;
+}
+
 // 点击文件列表
 $("#file_list_menu").click(function (e) {
-    e.preventDefault();
-    $(".side-bar-menu").removeClass("chosen-menu");
-    $("#file_list_menu").addClass("chosen-menu");
+    // $(".side-bar-menu").removeClass("chosen-menu");
+    // $("#file_list_menu").addClass("chosen-menu");
+
+    window.parent.location.replace("/list_file?toggle=" + isToggle() + "&lock=" + isLock());
 });
 
 // 点击上传文件
 $("#upload_file_menu").click(function (e) {
-    e.preventDefault();
-    $(".side-bar-menu").removeClass("chosen-menu");
-    $("#upload_file_menu").addClass("chosen-menu");
+    // $(".side-bar-menu").removeClass("chosen-menu");
+    // $("#upload_file_menu").addClass("chosen-menu");
+
+    window.parent.location.replace("/upload_file?toggle=" + isToggle() + "&lock=" + isLock());
 });
 
 // 点击下载文件
 $("#download_file_menu").click(function (e) {
-    e.preventDefault();
     $(".side-bar-menu").removeClass("chosen-menu");
     $("#download_file_menu").addClass("chosen-menu");
 });
 
 // 点击其它功能
 $("#other_function_menu").click(function (e) {
-    e.preventDefault();
     $(".side-bar-menu").removeClass("chosen-menu");
     $("#other_function_menu").addClass("chosen-menu");
 });

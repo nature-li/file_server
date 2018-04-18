@@ -58,10 +58,15 @@ func main() {
 	fs := http.FileServer(http.Dir("./template"))
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
 
-	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/", listFileHandler)
+	// 上传文件
+	http.HandleFunc("/upload_file", uploadFileHandler)
+	// 文件列表
+	http.HandleFunc("/list_file", listFileHandler)
+	http.HandleFunc("/query_file_list", queryFileListHandler)
+
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)
-	http.HandleFunc("/query_file_list", queryFileListHandler)
 
 	err := http.ListenAndServe(":12345", nil)
 	if err != nil {
