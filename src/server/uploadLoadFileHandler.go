@@ -7,17 +7,8 @@ import (
 
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	wrapperClass := ""
-	ret := r.Form.Get("toggle")
-	if ret == "true" {
-		wrapperClass = "toggled"
-	}
-
-	pinLock := "glyphicon-pushpin"
-	ret = r.Form.Get("lock")
-	if ret == "true" {
-		pinLock = "glyphicon-lock"
-	}
+	wrapperClass := r.Form.Get("toggle")
+	pinLock := r.Form.Get("lock")
 
 	t, err := template.ParseFiles("template/html/upload_file.html")
 	if err != nil {

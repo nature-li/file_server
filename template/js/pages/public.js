@@ -101,20 +101,20 @@ $(document).click(function (event) {
 function isToggle() {
     if ($("#wrapper").hasClass("toggled")) {
         if (isLock()) {
-            return true;
+            return "toggled";
         }
     }
 
-    return false;
+    return "";
 }
 
 // 是否lock
 function isLock() {
     if ($("#lock-side-bar").hasClass("glyphicon-lock")) {
-        return true;
+        return "glyphicon-lock";
     }
 
-    return false;
+    return "glyphicon-pushpin";
 }
 
 // 点击文件列表
