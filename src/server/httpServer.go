@@ -61,6 +61,7 @@ func main() {
 	http.HandleFunc("/", listFileHandler)
 	// 上传文件
 	http.HandleFunc("/upload_file", uploadFileHandler)
+	http.HandleFunc("/js_upload_file", jsUploadFileHandler)
 	// 文件列表
 	http.HandleFunc("/list_file", listFileHandler)
 	http.HandleFunc("/query_file_list", queryFileListHandler)

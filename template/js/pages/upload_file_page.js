@@ -1,6 +1,32 @@
 // 页面加载时
 $(document).ready(function () {
     $("#upload_file_btn").click(function (e) {
-        alert("ok");
+        var bar = $('#upload_file_progress_bar');
+        var percent = $('#upload_file_process_percent');
+
+        $('form').ajaxForm({
+            dataType: 'json',
+            beforeSend: function() {
+                $("#upload_file_progress").removeClass("hidden-self");
+                var percentVal = '0%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            success: function(data) {
+                if (data.code != "0") {
+                    $("#upload_file_error_label").removeClass("hidden-self");
+                    $("#upload_file_error_label").find("span").html("上传失败")
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("#upload_file_error_label").removeClass("hidden-self");
+                $("#upload_file_error_label").find("span").html("上传失败")
+            }
+        });
     })
 });
