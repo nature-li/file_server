@@ -18,6 +18,10 @@
     visibility: hidden;
 }
 
+.no-display {
+    display: none;
+}
+
 .chosen-menu {
     background: rgba(255, 255, 255, 0.2)
 }

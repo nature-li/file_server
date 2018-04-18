@@ -8,7 +8,6 @@ import (
 	"time"
 	"strconv"
 	"io"
-	"fmt"
 )
 
 const maxUploadSize = 3 * 1024 * 1024 * 1024
