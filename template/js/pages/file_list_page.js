@@ -49,7 +49,7 @@ function update_page_view(page_idx) {
     for (var i = 0; i < window.save_data.item_list.length; i++) {
         var item = window.save_data.item_list[i];
         html += "<tr><td>" + item.id + "</td>" +
-            "<td>" + item.file_name + "</td>" +
+            "<td><a href='" + item.file_url + "'download='" + item.file_name + "'>" + item.file_name + "</a></td>" +
             "<td>" + item.version + "</td>" +
             "<td>" + item.md5 + "</td>" +
             "<td>" + item.user_name + "</td>" +

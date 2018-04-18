@@ -12,7 +12,7 @@ import (
 )
 
 const maxUploadSize = 3 * 1024 * 1024 * 1024
-const uploadPath = "/Users/liyanguo/code/GoglandProjects/http_server/data"
+const uploadPath = "/Users/nature/cluster/centos/osx_work/go/http_server/data"
 
 type jsUploadFileResult struct {
 	RetCode int `json:"code"`

@@ -58,6 +58,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./template"))
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
 
+	dataFs := http.FileServer(http.Dir("/Users/nature/cluster/centos/osx_work/go/http_server/data"))
+	http.Handle("/data/", http.StripPrefix("/data/", dataFs))
+
 	http.HandleFunc("/", listFileHandler)
 	// 上传文件
 	http.HandleFunc("/upload_file", uploadFileHandler)

@@ -22,11 +22,13 @@ $(document).ready(function () {
                     $("#upload_file_form").addClass("no-display");
                     $("#upload_file_form_again").removeClass("no-display");
                 } else {
+                    $("#upload_file_progress").addClass("hidden-self");
                     $("#upload_file_error_label").removeClass("hidden-self");
                     $("#upload_file_error_label").find("span").html("上传失败")
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                $("#upload_file_progress").addClass("hidden-self");
                 $("#upload_file_error_label").removeClass("hidden-self");
                 $("#upload_file_error_label").find("span").html("上传失败")
             }

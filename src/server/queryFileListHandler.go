@@ -10,6 +10,7 @@ import (
 type dataItem struct {
 	Id int `json:"id"`
 	FileName string `json:"file_name"`
+	FileUrl string `json:"file_url"`
 	Version string `json:"version"`
 	Md5 string `json:"md5"`
 	UserName string `json:"user_name"`
@@ -39,7 +40,8 @@ func queryFileListHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < count; i++ {
 		it := dataItem{}
 		it.Id = i
-		it.FileName = "file_name"
+		it.FileName = "hello.txt"
+		it.FileUrl = "/data/1524059667_chart.png"
 		it.Version = "0.12"
 		it.Md5 = "md5"
 		it.UserName = "lyg"
