@@ -43,22 +43,25 @@ $.showConfirm = function (str, func_ok, func_close) {
     });
 };
 
-// 解锁侧边栏
+// 解锁浮动锁
 function unlock_pin() {
     $("#lock-side-bar").removeClass("glyphicon-lock");
     $("#lock-side-bar").addClass("glyphicon-pushpin");
+    $.cookie("pin_lock", 0);
 }
 
-// 锁住侧边栏
+// 锁住浮动锁
 function lock_pin() {
     $("#lock-side-bar").removeClass("glyphicon-pushpin");
     $("#lock-side-bar").addClass("glyphicon-lock");
+    $.cookie("pin_lock", 1);
 }
 
 // 隐藏侧边栏
 $(".side-bar-hidden").click(function (e) {
     $("#wrapper").removeClass("toggled");
     $("#expand-side-bar").removeClass("hidden-self");
+    $.cookie("pin_nav", 0);
 });
 
 // 隐藏侧边栏
@@ -66,6 +69,7 @@ $(".side-bar-condition-hidden").click(function (e) {
     if ($("#lock-side-bar").hasClass("glyphicon-pushpin")) {
         $("#wrapper").removeClass("toggled");
         $("#expand-side-bar").removeClass("hidden-self");
+        $.cookie("pin_nav", 0);
     }
 });
 
@@ -74,9 +78,10 @@ $(".side-bar-show").click(function (e) {
     unlock_pin();
     $("#wrapper").addClass("toggled");
     $("#expand-side-bar").addClass("hidden-self");
+    $.cookie("pin_nav", 1);
 });
 
-// 加/解锁侧边栏
+// 切换浮动锁
 $("#lock-side-bar").click(function (e) {
     if ($("#lock-side-bar").hasClass("glyphicon-pushpin")) {
         lock_pin();
@@ -85,61 +90,29 @@ $("#lock-side-bar").click(function (e) {
     }
 });
 
-// 加/解锁侧边栏
+// 隐藏侧边栏
 $(document).click(function (event) {
     if ($("#lock-side-bar").hasClass("glyphicon-pushpin")) {
         if (!$(event.target).closest("#sidebar-wrapper, #expand-side-bar").length) {
             if ($("#wrapper").hasClass("toggled")) {
                 $("#wrapper").removeClass("toggled");
                 $("#expand-side-bar").removeClass("hidden-self");
+
+                $.cookie("pin_nav", 0);
+                $.cookie("pin_lock", 0);
             }
         }
     }
 });
 
-// 是否toggle
-function isToggle() {
-    if ($("#wrapper").hasClass("toggled")) {
-        if (isLock()) {
-            return "toggled";
-        }
-    }
-
-    return "";
-}
-
-// 是否lock
-function isLock() {
-    if ($("#lock-side-bar").hasClass("glyphicon-lock")) {
-        return "glyphicon-lock";
-    }
-
-    return "glyphicon-pushpin";
-}
-
-// 是否隐藏扩展按钮
-function isHiddenExpend() {
-    if (isToggle()) {
-        return "hidden-self";
-    }
-
-    return "";
-}
-
 // 点击文件列表
 $("#file_list_menu").click(function (e) {
-    // $(".side-bar-menu").removeClass("chosen-menu");
-    // $("#file_list_menu").addClass("chosen-menu");
-
-    window.parent.location.replace("/list_file?toggle=" + isToggle() + "&lock=" + isLock() + "&hidden=" + isHiddenExpend());
+    window.parent.location.replace("/list_file");
 });
 
 // 点击上传文件
 $("#upload_file_menu").click(function (e) {
-    // $(".side-bar-menu").removeClass("chosen-menu");
-    // $("#upload_file_menu").addClass("chosen-menu");
-
-    window.parent.location.replace("/upload_file?toggle=" + isToggle() + "&lock=" + isLock() + "&hidden=" + isHiddenExpend());
+    window.parent.location.replace("/upload_file");
 });
 
 // 点击下载文件
