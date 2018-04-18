@@ -122,14 +122,14 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">版本</label>
                             <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                                   placeholder="输入版本号" maxlength="32">
+                                   placeholder="输入版本号" maxlength="32" name="file_version">
                         </div>
                         <div class="form-group">
                             <label for="exampleFormControlTextarea1">描述</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                      maxlength="256"></textarea>
-                            <small id="upload_file_error_label" class="form-text text-muted hidden-self"><span
-                                    style="color:red"></span></small>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" maxlength="256" name="file_desc"></textarea>
+                            <small id="upload_file_error_label" class="form-text text-muted hidden-self">
+                                <span style="color:red"></span>
+                            </small>
                         </div>
                         <button id="upload_file_btn" type="submit" class="btn btn-primary">上传</button>
                     </form>

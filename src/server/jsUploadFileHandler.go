@@ -8,6 +8,7 @@ import (
 	"time"
 	"strconv"
 	"io"
+	"fmt"
 )
 
 const maxUploadSize = 3 * 1024 * 1024 * 1024
@@ -25,6 +26,11 @@ func jsUploadFileHandler(w http.ResponseWriter, r *http.Request) {
 		renderError(w, "FILE_TOO_BIG", http.StatusBadRequest)
 		return
 	}
+
+	r.ParseForm()
+
+	fmt.Println(r.Form.Get("file_version"))
+	fmt.Println(r.Form.Get("file_desc"))
 
 	// 打开旧文件
 	srcFile, handler, err := r.FormFile("uploadFile")
