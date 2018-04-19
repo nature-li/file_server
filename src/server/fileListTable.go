@@ -17,12 +17,13 @@ type tableRow struct {
 	UpdateTime string `json:"update_time_secs"`
 	UpdateTimeFmt string `json:"update_time"`
 	Desc string `json:"all_desc"`
-	ShortDesc string `json:"desc"`
+	ShortDesc string `json:"short_desc"`
 }
 
 func (o *tableRow) format() {
-	if len(o.Desc) > 30 {
-		o.ShortDesc = o.Desc[0:30]
+	runeDesc := []rune(o.Desc)
+	if len(runeDesc) > 10 {
+		o.ShortDesc = string(runeDesc[:10]) + "..."
 	} else {
 		o.ShortDesc = o.Desc
 	}

@@ -55,8 +55,8 @@ function update_page_view(page_idx) {
             "<td>" + item.md5_value + "</td>" +
             "<td>" + item.user_name + "</td>" +
             "<td>" + item.create_time + "</td>" +
-            "<td>" + item.desc + "</td>" +
-            "<td style='text-align:center;'>" +
+            "<td><a href='#'>" + item.short_desc + "</a></td>" +
+            "<td>" +
             "<button type='button' class='btn btn-primary user-edit-button'>删除</button>" +
             "</td>" +
             "</tr>";
