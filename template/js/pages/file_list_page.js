@@ -48,13 +48,18 @@ function update_page_view(page_idx) {
     var html = "";
     for (var i = 0; i < window.save_data.item_list.length; i++) {
         var item = window.save_data.item_list[i];
-        html += "<tr><td>" + item.id + "</td>" +
+        html += "<tr>" +
+            "<td>" + item.id + "</td>" +
             "<td><a href='/data/" + item.file_url + "'download='" + item.file_name + "'>" + item.file_name + "</a></td>" +
             "<td>" + item.version + "</td>" +
             "<td>" + item.md5_value + "</td>" +
             "<td>" + item.user_name + "</td>" +
             "<td>" + item.create_time + "</td>" +
-            "<td>" + item.desc + "</td></tr>";
+            "<td>" + item.desc + "</td>" +
+            "<td style='text-align:center;'>" +
+            "<button type='button' class='btn btn-primary user-edit-button'>删除</button>" +
+            "</td>" +
+            "</tr>";
     }
     $("#file_list_result").find("tr:gt(0)").remove();
     $("#file_list_result").append(html);

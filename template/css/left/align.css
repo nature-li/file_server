@@ -29,3 +29,11 @@
 .side-bar-menu {
 
 }
+
+.table th {
+    text-align: center;
+}
+
+.table td {
+    text-align: center;
+}

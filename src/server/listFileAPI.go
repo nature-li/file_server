@@ -90,10 +90,10 @@ func (o *listFileAPI) queryDB(db *sql.DB, fileName, limit, offset string) (int, 
 	var dataSql string
 	if len(fileName) != 0 {
 		dataSql = "SELECT id,file_name,url_name,version,md5_value,user_name,desc,create_time,update_time " +
-			"FROM file_list WHERE file_name like ? order by create_time limit ? offset ?"
+			"FROM file_list WHERE file_name like ? order by create_time desc limit ? offset ?"
 	} else {
 		dataSql = "SELECT id,file_name,url_name,version,md5_value,user_name,desc,create_time,update_time " +
-			"FROM file_list order by create_time limit ? offset ?"
+			"FROM file_list order by create_time desc limit ? offset ?"
 	}
 
 	var rows *sql.Rows
