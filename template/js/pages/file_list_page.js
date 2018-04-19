@@ -20,10 +20,10 @@ function query_and_update_view() {
 
     // 加载数据
     $.ajax({
-            url: '/query_file_list',
+            url: '/file_list_api',
             type: "post",
             data: {
-                'file_name': "*",
+                'file_name': $("#search_file_name").val(),
                 'off_set': off_set,
                 'limit': limit
             },
@@ -49,9 +49,9 @@ function update_page_view(page_idx) {
     for (var i = 0; i < window.save_data.item_list.length; i++) {
         var item = window.save_data.item_list[i];
         html += "<tr><td>" + item.id + "</td>" +
-            "<td><a href='" + item.file_url + "'download='" + item.file_name + "'>" + item.file_name + "</a></td>" +
+            "<td><a href='/data/" + item.file_url + "'download='" + item.file_name + "'>" + item.file_name + "</a></td>" +
             "<td>" + item.version + "</td>" +
-            "<td>" + item.md5 + "</td>" +
+            "<td>" + item.md5_value + "</td>" +
             "<td>" + item.user_name + "</td>" +
             "<td>" + item.create_time + "</td>" +
             "<td>" + item.desc + "</td></tr>";
@@ -63,8 +63,8 @@ function update_page_view(page_idx) {
     update_page_partition(page_idx);
 }
 
-// 页面加载时
-$(document).ready(function () {
+// 条件搜索
+function init_page() {
     // 定义全局变量
     if (!window.save_data) {
         reset_save_data();
@@ -72,4 +72,13 @@ $(document).ready(function () {
 
     // 查询数据并更新页面
     query_and_update_view();
+}
+
+// 页面加载时
+$(document).ready(function () {
+    init_page();
+
+    $("#search_file_name_btn").click(function () {
+        init_page();
+    });
 });

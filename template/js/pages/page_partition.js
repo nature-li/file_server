@@ -10,11 +10,13 @@ function save_data_and_update_page_view(data) {
         window.save_data.item_list = [];
 
         // 保存所有数据
-        var length = data.content.length;
-        window.save_data.db_return_item_count = length;
-        for (var i = 0; i < length; i++) {
-            var item = data.content[i];
-            window.save_data.item_list.push(item);
+        if (data.content != null) {
+            var length = data.content.length;
+            window.save_data.db_return_item_count = length;
+            for (var i = 0; i < length; i++) {
+                var item = data.content[i];
+                window.save_data.item_list.push(item);
+            }
         }
 
         // 更新view

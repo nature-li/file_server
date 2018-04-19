@@ -82,3 +82,13 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	//stream the body to the client without fully loading it into memory
 	io.Copy(w, resp.Body)
 }
+
+func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
+	handler := uploadFileAPI{}
+	handler.handle(w, r)
+}
+
+func listFileAPIHandler(w http.ResponseWriter, r *http.Request) {
+	handler := listFileAPI{}
+	handler.handle(w, r)
+}

@@ -18,7 +18,7 @@ $(document).ready(function () {
                 percent.html(percentVal);
             },
             success: function(data) {
-                if (data.code == "0") {
+                if (data.code == "200") {
                     $("#upload_file_form").addClass("no-display");
                     $("#upload_file_form_again").removeClass("no-display");
                 } else {
@@ -35,11 +35,30 @@ $(document).ready(function () {
         });
     });
 
+    // 再传一个
     $("#upload_again_btn").click(function (e) {
        window.location.reload();
     });
 
+    // 返回首页
     $("#back_to_home").click(function (e) {
         window.location.replace("/");
-    })
+    });
+
+    // 检测文件大小
+    $("#choose_file_for_upload").change(function () {
+        if (this.files == null) {
+            return;
+        }
+
+        if (this.files.length < 1) {
+            return;
+        }
+
+        var file = this.files[0];
+        var length = file.size / 1024.0 / 1024.0;
+        length = length.toFixed(2);
+        var text = "该文件大小为: " + length + "M";
+        $("#check_file_size_label").html(text);
+    });
 });

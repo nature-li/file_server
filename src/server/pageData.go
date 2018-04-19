@@ -5,11 +5,12 @@ import (
 )
 
 type pageData struct {
-	IsLogin bool
-	LoginName string
-	WrapperClass string
-	PinLock string
-	HiddenClass string
+	IsLogin           bool
+	LoginName         string
+	WrapperClass      string
+	PinLock           string
+	HiddenClass       string
+	UploadMaxFileSize string
 }
 
 func newPageData(w http.ResponseWriter, r *http.Request, isLogin bool, loginName string) *pageData {
@@ -31,5 +32,5 @@ func newPageData(w http.ResponseWriter, r *http.Request, isLogin bool, loginName
 		}
 	}
 
-	return &pageData{IsLogin:isLogin, LoginName:loginName, WrapperClass:wrapperClass, PinLock:pinLock, HiddenClass:hiddenClass}
+	return &pageData{IsLogin: isLogin, LoginName: loginName, WrapperClass: wrapperClass, PinLock: pinLock, HiddenClass: hiddenClass, UploadMaxFileSize: maxUploadSizeStr}
 }

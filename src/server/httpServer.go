@@ -4,13 +4,8 @@ import (
 	"net/http"
 	"fmt"
 	"mtlog"
-	"server/session"
 	"server/session/cookie"
 )
-
-// hello world, the web server
-var logger *mtlog.Logger
-var manager session.Manager
 
 func init() {
 	key := "1234567890"
@@ -50,24 +45,24 @@ func delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, "./logs", "server", 100*1024*1024, -1)
+	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, mtLogPath, mtLogName, mtLogMaxFileSize, mtLogKeepFileCount)
 	if !logger.Start() {
 		fmt.Println("logger.Start failed")
 	}
 
-	fs := http.FileServer(http.Dir("./template"))
+	fs := http.FileServer(http.Dir(httpTemplatePath))
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
 
-	dataFs := http.FileServer(http.Dir("/Users/nature/cluster/centos/osx_work/go/http_server/data"))
+	dataFs := http.FileServer(http.Dir(httpDataPath))
 	http.Handle("/data/", http.StripPrefix("/data/", dataFs))
 
 	http.HandleFunc("/", listFileHandler)
 	// 上传文件
 	http.HandleFunc("/upload_file", uploadFileHandler)
-	http.HandleFunc("/js_upload_file", jsUploadFileHandler)
+	http.HandleFunc("/upload_file_api", uploadFileAPIHandler)
 	// 文件列表
 	http.HandleFunc("/list_file", listFileHandler)
-	http.HandleFunc("/query_file_list", queryFileListHandler)
+	http.HandleFunc("/file_list_api", listFileAPIHandler)
 
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)

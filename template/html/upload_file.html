@@ -114,10 +114,11 @@
 
             <div id="upload_file_form" class="row">
                 <div class="col-lg-6">
-                    <form action="/js_upload_file" method="post" enctype="multipart/form-data">
+                    <form action="/upload_file_api" method="post" enctype="multipart/form-data">
                         <div class="form-group">
-                            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="uploadFile">
-                            <small id="emailHelp" class="form-text text-muted">允许上传文件大小为500M</small>
+                            <small id="emailHelp" class="form-text text-muted">最大允许上传文件大小为: {{ .UploadMaxFileSize}}M</small>
+                            <input type="file" class="form-control-file" name="uploadFile" id="choose_file_for_upload">
+                            <small id="check_file_size_label" class="form-text text-muted"></small>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">版本</label>
@@ -140,11 +141,11 @@
         <div id="upload_file_form_again" class="row no-display">
             <div class="col-lg-6">
                 <div style="float: right">
-                    <button id="back_to_home" type="button" class="btn btn-info btn-lg" style="font-size: 30px">
+                    <button id="back_to_home" type="button" class="btn btn-info btn-lg" style="font-size: 20px">
                         <span class="glyphicon glyphicon-home"></span>返回首页
                     </button>
-                    <button id="upload_again_btn" type="button" class="btn btn-primary btn-lg" style="font-size: 30px">
-                        <span class="glyphicon glyphicon-cloud-upload"></span>上传成功再传一个
+                    <button id="upload_again_btn" type="button" class="btn btn-primary btn-lg" style="font-size: 20px">
+                        <span class="glyphicon glyphicon-cloud-upload"></span>再传一个
                     </button>
                 </div>
             </div>
