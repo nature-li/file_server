@@ -40,11 +40,6 @@ $(document).ready(function () {
        window.location.reload();
     });
 
-    // 返回首页
-    $("#back_to_home").click(function (e) {
-        window.location.replace("/");
-    });
-
     // 检测文件大小
     $("#choose_file_for_upload").change(function () {
         if (this.files == null) {

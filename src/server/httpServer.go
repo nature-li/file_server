@@ -63,6 +63,12 @@ func main() {
 	// 文件列表
 	http.HandleFunc("/list_file", listFileHandler)
 	http.HandleFunc("/file_list_api", listFileAPIHandler)
+	// 编辑文件
+	http.HandleFunc("/edit_file", editFileHandler)
+	// 删除文件
+	http.HandleFunc("/delete_file_api", deleteFileAPIHandler)
+	// 404页面
+	http.HandleFunc("/not_found", notFoundHandler)
 
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)

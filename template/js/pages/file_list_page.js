@@ -49,16 +49,12 @@ function update_page_view(page_idx) {
     for (var i = 0; i < window.save_data.item_list.length; i++) {
         var item = window.save_data.item_list[i];
         html += "<tr>" +
-            "<td>" + item.id + "</td>" +
-            "<td><a href='/data/" + item.file_url + "'download='" + item.file_name + "'>" + item.file_name + "</a></td>" +
+            "<td><a href='" + item.file_url + "'download='" + item.file_name + "'><span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>下载</a></td>" +
+            "<td>" + item.file_name + "</td>" +
             "<td>" + item.version + "</td>" +
-            "<td>" + item.md5_value + "</td>" +
-            "<td>" + item.user_name + "</td>" +
             "<td>" + item.create_time + "</td>" +
-            "<td><a href='#'>" + item.short_desc + "</a></td>" +
-            "<td>" +
-            "<button type='button' class='btn btn-primary user-edit-button'>删除</button>" +
-            "</td>" +
+            "<td>" + item.md5_value + "</td>" +
+            "<td><a href='/edit_file?id=" + item.id + "'>详细信息</a></td>" +
             "</tr>";
     }
     $("#file_list_result").find("tr:gt(0)").remove();
@@ -85,5 +81,12 @@ $(document).ready(function () {
 
     $("#search_file_name_btn").click(function () {
         init_page();
+    });
+
+    $("#search_file_name").keydown(function (event) {
+        if (event.keyCode == "13") {
+            event.preventDefault();
+            init_page();
+        }
     });
 });

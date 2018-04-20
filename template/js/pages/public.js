@@ -126,3 +126,13 @@ $("#other_function_menu").click(function (e) {
     $(".side-bar-menu").removeClass("chosen-menu");
     $("#other_function_menu").addClass("chosen-menu");
 });
+
+// html 编码
+function htmlEncode(value) {
+    return $("<div/>").text(value).html();
+}
+
+// 返回首页
+$("#back_to_home").click(function (e) {
+    window.location.replace("/");
+});

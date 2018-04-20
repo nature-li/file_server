@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"time"
+	"strconv"
 )
 
 type IndexPageData struct {
@@ -15,10 +16,6 @@ type IndexPageData struct {
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		http.Redirect(w, r, "/login/index", http.StatusFound)
-	}
-
 	t, err := template.ParseFiles("template/html/404.html")
 	if err != nil {
 		logger.Error(err.Error())
@@ -90,5 +87,45 @@ func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 func listFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	handler := listFileAPI{}
+	handler.handle(w, r)
+}
+
+func editFileHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	queryId := r.Form.Get("id")
+
+	t, err := template.ParseFiles("template/html/edit_file.html")
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+
+	handler := editFileAPI{}
+	data := handler.queryFileList(queryId)
+	if data == nil {
+		return
+	}
+
+	if data.Id == 0 {
+		http.Redirect(w, r, "/not_found", 301)
+		return
+	}
+
+	cookie := http.Cookie{Name: "upload_max_file_limit", Value: strconv.FormatInt(maxUploadSize, 10), Path: "/", HttpOnly: true, MaxAge: 0}
+	http.SetCookie(w, &cookie)
+
+	pageData := newPageData(w, r, true, "lyg")
+	pageData.setPageToggle(w)
+
+	data.pageData = pageData
+	t.Execute(w, data)
+}
+
+func deleteFileAPIHandler(w http.ResponseWriter, r *http.Request) {
+	handler := deleteFileAPI{}
 	handler.handle(w, r)
 }

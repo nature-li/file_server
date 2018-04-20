@@ -8,13 +8,17 @@ import (
 )
 
 type listFileAPI struct {
-	Success   string     `json:"success"`
-	ItemCount int        `json:"item_count"`
-	Content   []tableRow `json:"content"`
+	Success   string            `json:"success"`
+	ItemCount int               `json:"item_count"`
+	Content   []jsonListFileAPI `json:"content"`
 }
 
 func (o *listFileAPI) handle(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	if err := r.ParseForm(); err != nil {
+		logger.Error(err.Error())
+		o.render(w, "false", 0, nil)
+		return
+	}
 
 	fileName := r.Form.Get("file_name")
 	offset := r.Form.Get("off_set")
@@ -44,7 +48,7 @@ func (o *listFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 	o.render(w, "true", totalCount, rows)
 }
 
-func (o *listFileAPI)render(w http.ResponseWriter, success string, itemCount int, content []tableRow) {
+func (o *listFileAPI) render(w http.ResponseWriter, success string, itemCount int, content []jsonListFileAPI) {
 	w.WriteHeader(http.StatusOK)
 
 	o.Success = success
@@ -61,14 +65,13 @@ func (o *listFileAPI)render(w http.ResponseWriter, success string, itemCount int
 
 func (o *listFileAPI) countDB(db *sql.DB, fileName string) (code int, totalCount int) {
 	var err error
-	var querySql string
+	var querySql = "SELECT COUNT(1) AS COUNT FROM file_list"
 	var rows *sql.Rows
 	if len(fileName) != 0 {
-		querySql = "SELECT COUNT(1) AS COUNT FROM file_list WHERE file_name like ?"
+		querySql += " WHERE file_name like ?"
 		logger.Info(querySql)
-		rows, err = db.Query(querySql, "%" + fileName + "%")
+		rows, err = db.Query(querySql, "%"+fileName+"%")
 	} else {
-		querySql = "SELECT COUNT(1) AS COUNT FROM file_list"
 		logger.Info(querySql)
 		rows, err = db.Query(querySql, fileName)
 	}
@@ -85,21 +88,19 @@ func (o *listFileAPI) countDB(db *sql.DB, fileName string) (code int, totalCount
 	return http.StatusOK, totalCount
 }
 
-func (o *listFileAPI) queryDB(db *sql.DB, fileName, limit, offset string) (int, string, []tableRow) {
+func (o *listFileAPI) queryDB(db *sql.DB, fileName, limit, offset string) (int, string, []jsonListFileAPI) {
 	var err error
-	var dataSql string
+	var dataSql = "SELECT id,file_name,url_name,version,md5_value,create_time FROM file_list"
 	if len(fileName) != 0 {
-		dataSql = "SELECT id,file_name,url_name,version,md5_value,user_name,desc,create_time,update_time " +
-			"FROM file_list WHERE file_name like ? order by create_time desc limit ? offset ?"
+		dataSql += " WHERE file_name like ? order by create_time desc limit ? offset ?"
 	} else {
-		dataSql = "SELECT id,file_name,url_name,version,md5_value,user_name,desc,create_time,update_time " +
-			"FROM file_list order by create_time desc limit ? offset ?"
+		dataSql += " order by create_time desc limit ? offset ?"
 	}
 
 	var rows *sql.Rows
 	if len(fileName) != 0 {
 		logger.Info(dataSql)
-		rows, err = db.Query(dataSql, "%" + fileName + "%", limit, offset)
+		rows, err = db.Query(dataSql, "%"+fileName+"%", limit, offset)
 	} else {
 		logger.Info(dataSql)
 		rows, err = db.Query(dataSql, limit, offset)
@@ -110,10 +111,10 @@ func (o *listFileAPI) queryDB(db *sql.DB, fileName, limit, offset string) (int, 
 	}
 	defer rows.Close()
 
-	var rowList []tableRow
+	var rowList []jsonListFileAPI
 	for rows.Next() {
-		row := tableRow{}
-		err = rows.Scan(&row.Id, &row.FileName, &row.UrlName, &row.Version, &row.Md5, &row.UserName, &row.Desc, &row.CreateTime, &row.UpdateTime)
+		row := jsonListFileAPI{}
+		err = rows.Scan(&row.Id, &row.FileName, &row.urlName, &row.Version, &row.Md5, &row.createTime)
 		if err != nil {
 			logger.Error(err.Error())
 			return http.StatusInternalServerError, "QUERY_DB_FAILED", nil
