@@ -69,6 +69,8 @@ func main() {
 	http.HandleFunc("/delete_file_api", deleteFileAPIHandler)
 	// 404页面
 	http.HandleFunc("/not_found", notFoundHandler)
+	// 登录页面
+	http.HandleFunc("/user_login", userLoginHandler)
 
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)

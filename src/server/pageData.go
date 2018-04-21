@@ -36,12 +36,12 @@ func newPageData(w http.ResponseWriter, r *http.Request, isLogin bool, loginName
 }
 
 func (o *pageData) setPageToggle(w http.ResponseWriter) {
-	o.WrapperClass = "toggled"
-	o.PinLock = "glyphicon-lock"
-
-	cookie := http.Cookie{Name: "pin_nav", Value: "1", Path: "/", HttpOnly: true, MaxAge: 0}
-	http.SetCookie(w, &cookie)
-
-	cookie = http.Cookie{Name: "pin_lock", Value: "1", Path: "/", HttpOnly: true, MaxAge: 0}
-	http.SetCookie(w, &cookie)
+	//o.WrapperClass = "toggled"
+	//o.PinLock = "glyphicon-lock"
+	//
+	//cookie := http.Cookie{Name: "pin_nav", Value: "1", Path: "/", HttpOnly: true, MaxAge: 0}
+	//http.SetCookie(w, &cookie)
+	//
+	//cookie = http.Cookie{Name: "pin_lock", Value: "1", Path: "/", HttpOnly: true, MaxAge: 0}
+	//http.SetCookie(w, &cookie)
 }

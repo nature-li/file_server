@@ -24,6 +24,16 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
+func userLoginHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("template/html/user_login.html")
+	if err != nil {
+		logger.Error(err.Error())
+	}
+
+	pageData := newPageData(w, r, true, "lyg")
+	t.Execute(w, pageData)
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("template/html/index.html")
 	if err != nil {
