@@ -34,7 +34,7 @@ func (o *SessionMemory) SessionId() string {
 	return o.sessionId
 }
 
-func (o *SessionMemory) Set(key string, value interface{}) error {
+func (o *SessionMemory) Set(key string, value string) error {
 	gLock.Lock()
 	defer gLock.Unlock()
 
@@ -43,7 +43,7 @@ func (o *SessionMemory) Set(key string, value interface{}) error {
 	return nil
 }
 
-func (o *SessionMemory) Get(key string) interface{} {
+func (o *SessionMemory) Get(key string) string {
 	gLock.Lock()
 	defer gLock.Unlock()
 

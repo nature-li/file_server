@@ -135,3 +135,8 @@ func deleteFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	handler := deleteFileAPI{}
 	handler.handle(w, r)
 }
+
+func userLoginAPIHandler(w http.ResponseWriter, r *http.Request) {
+	handler := userLoginAPI{}
+	handler.handle(w, r)
+}

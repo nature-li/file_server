@@ -30,8 +30,16 @@ func (o *deleteFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if o.deleteFromDisk(w, fileId) {
-		o.deleteFromDB(w, fileId)
+	db, err := sql.Open("sqlite3", sqliteDbPath)
+	if err != nil {
+		logger.Error(err.Error())
+		o.render(w, false, "OPEN_DB_FAILED")
+		return
+	}
+	defer db.Close()
+
+	if o.deleteFromDisk(w, db, fileId) {
+		o.deleteFromDB(w, db, fileId)
 	}
 }
 
@@ -45,19 +53,14 @@ func (o *deleteFileAPI) render(w http.ResponseWriter, success bool, desc string)
 		return
 	}
 
-	w.Write(result)
+	_, err = w.Write(result)
+	if err != nil {
+		logger.Error(err.Error())
+	}
 }
 
 
-func (o *deleteFileAPI) deleteFromDisk(w http.ResponseWriter, fileId string) bool {
-	db, err := sql.Open("sqlite3", sqliteDbPath)
-	if err != nil {
-		logger.Error(err.Error())
-		o.render(w, false, "OPEN_DB_FAILED")
-		return false
-	}
-	defer db.Close()
-
+func (o *deleteFileAPI) deleteFromDisk(w http.ResponseWriter, db *sql.DB, fileId string) bool {
 	querySql := "SELECT url_name FROM file_list WHERE id = ?"
 	rows, err := db.Query(querySql, fileId)
 	if err != nil {
@@ -94,15 +97,7 @@ func (o *deleteFileAPI) deleteFromDisk(w http.ResponseWriter, fileId string) boo
 	return true
 }
 
-func (o *deleteFileAPI) deleteFromDB(w http.ResponseWriter, fileId string) bool {
-	db, err := sql.Open("sqlite3", sqliteDbPath)
-	if err != nil {
-		logger.Error(err.Error())
-		o.render(w, false, "OPEN_DB_FAILED")
-		return false
-	}
-	defer db.Close()
-
+func (o *deleteFileAPI) deleteFromDB(w http.ResponseWriter, db *sql.DB, fileId string) bool {
 	querySql := "DELETE FROM file_list WHERE id = ?"
 	stmt, err := db.Prepare(querySql)
 	if err != nil {

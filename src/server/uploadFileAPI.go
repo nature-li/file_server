@@ -103,7 +103,10 @@ func (o *uploadFileAPI)render(w http.ResponseWriter, httpCode int, desc string) 
 		logger.Error(err.Error())
 		return
 	}
-	w.Write(byteResult)
+	_, err = w.Write(byteResult)
+	if err != nil {
+		logger.Error(err.Error())
+	}
 }
 
 func (o *uploadFileAPI)getNewName() string {

@@ -13,7 +13,7 @@ import (
 
 type SessionCookie struct {
 	sessionId      string
-	dict           map[string]interface{}
+	dict           map[string]string
 	lastAccessTime time.Time
 	w              http.ResponseWriter
 	manager        *Manager
@@ -72,18 +72,18 @@ func (o *SessionCookie) decodeString(secret string) (string, error) {
 	return string(raw), nil
 }
 func newSessionCookie(manager *Manager, w http.ResponseWriter) *SessionCookie {
-	return &SessionCookie{dict: make(map[string]interface{}), manager: manager, w: w}
+	return &SessionCookie{dict: make(map[string]string), manager: manager, w: w}
 }
 
 func (o *SessionCookie) SessionId() string {
 	return o.sessionId
 }
 
-func (o *SessionCookie) Set(key string, value interface{}) error {
+func (o *SessionCookie) Set(key string, value string) error {
 	o.updateAccessTime()
 
 	o.dict[key] = value
-	result, err := o.encodeString(value.(string))
+	result, err := o.encodeString(value)
 	if err != nil {
 		return err
 	}
@@ -92,13 +92,13 @@ func (o *SessionCookie) Set(key string, value interface{}) error {
 	return nil
 }
 
-func (o *SessionCookie) Get(key string) interface{} {
+func (o *SessionCookie) Get(key string) string {
 	o.updateAccessTime()
 
 	if v, ok := o.dict[key]; ok {
 		return v
 	}
-	return nil
+	return ""
 }
 
 func (o *SessionCookie) Del(key string) error {

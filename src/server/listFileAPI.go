@@ -54,13 +54,16 @@ func (o *listFileAPI) render(w http.ResponseWriter, success string, itemCount in
 	o.Success = success
 	o.ItemCount = itemCount
 	o.Content = content
-	byteResult, err := json.Marshal(o)
+	result, err := json.Marshal(o)
 	if err != nil {
 		logger.Error(err.Error())
 		return
 	}
 
-	w.Write(byteResult)
+	_, err = w.Write(result)
+	if err != nil {
+		logger.Error(err.Error())
+	}
 }
 
 func (o *listFileAPI) countDB(db *sql.DB, fileName string) (code int, totalCount int) {

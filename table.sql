@@ -20,3 +20,4 @@ CREATE TABLE user_list (
   passwd varchar(255) not null,
   create_time long not null
 );
+CREATE UNIQUE INDEX user_index on user_list (user_name);

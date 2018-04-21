@@ -4,8 +4,8 @@ import "net/http"
 
 type Session interface {
 	SessionId() string
-	Set(string, interface{}) error
-	Get(string) interface{}
+	Set(string, string) error
+	Get(string) string
 	Del(string) error
 }
 

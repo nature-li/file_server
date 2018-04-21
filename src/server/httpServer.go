@@ -7,31 +7,6 @@ import (
 	"server/session/cookie"
 )
 
-func init() {
-	key := "1234567890"
-	key += "1234567890"
-	key += "1234567890"
-	key += "12"
-
-	var err error
-	//manager, err = memory.NewManager("session_id", 60)
-	manager, err = cookie.NewManager(key, "session_id", "last_access_time", 60)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-}
-
-func login(w http.ResponseWriter, r *http.Request) {
-	s := manager.SessionStart(w, r)
-
-	name := s.Get("name")
-	if name == nil {
-		s.Set("name", "lyg")
-	}
-	fmt.Println("name:", name)
-	fmt.Fprintln(w, "login")
-}
-
 func logout(w http.ResponseWriter, r *http.Request) {
 	manager.SessionDestroy(w, r)
 	fmt.Fprintln(w, "logout")
@@ -48,6 +23,13 @@ func main() {
 	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, mtLogPath, mtLogName, mtLogMaxFileSize, mtLogKeepFileCount)
 	if !logger.Start() {
 		fmt.Println("logger.Start failed")
+	}
+
+	var err error
+	manager, err = cookie.NewManager(cookieSecret, cookieSessionId, cookieAccessTime, sessionAliveTime)
+	if err != nil {
+		logger.Error("NewManager failed")
+		return
 	}
 
 	fs := http.FileServer(http.Dir(httpTemplatePath))
@@ -71,11 +53,12 @@ func main() {
 	http.HandleFunc("/not_found", notFoundHandler)
 	// 登录页面
 	http.HandleFunc("/user_login", userLoginHandler)
+	http.HandleFunc("/user_login_api", userLoginAPIHandler)
 
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)
 
-	err := http.ListenAndServe(":12345", nil)
+	err = http.ListenAndServe(":12345", nil)
 	if err != nil {
 		logger.Fatalf("ListenAndServe: ", err)
 	}
