@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"time"
-	"strconv"
 )
 
 type IndexPageData struct {
@@ -125,11 +124,8 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie := http.Cookie{Name: "upload_max_file_limit", Value: strconv.FormatInt(maxUploadSize, 10), Path: "/", HttpOnly: true, MaxAge: 0}
-	http.SetCookie(w, &cookie)
 
 	pageData := newPageData(w, r, true, "lyg")
-	pageData.setPageToggle(w)
 
 	data.pageData = pageData
 	t.Execute(w, data)

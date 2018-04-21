@@ -49,12 +49,13 @@ function update_page_view(page_idx) {
     for (var i = 0; i < window.save_data.item_list.length; i++) {
         var item = window.save_data.item_list[i];
         html += "<tr>" +
+            "<td style='display:none'>" + item.id + "</td>" +
             "<td><a href='" + item.file_url + "'download='" + item.file_name + "'><span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>下载</a></td>" +
             "<td>" + item.file_name + "</td>" +
             "<td>" + item.version + "</td>" +
             "<td>" + item.create_time + "</td>" +
             "<td>" + item.md5_value + "</td>" +
-            "<td><a href='/edit_file?id=" + item.id + "'>详细信息</a></td>" +
+            "<td><a href='#' class='a_file_detail'>详细信息</a></td>" +
             "</tr>";
     }
     $("#file_list_result").find("tr:gt(0)").remove();
@@ -89,4 +90,15 @@ $(document).ready(function () {
             init_page();
         }
     });
+});
+
+// 详细信息绑定函数
+$(document).on("click", ".a_file_detail", function () {
+    // 希望打开的新页面展示侧边栏
+    $.cookie("pin_nav", 1);
+    $.cookie("pin_lock", 1);
+
+    var file_id = $(this).parent().parent().find("td:eq(0)").text();
+    var edit_url = "/edit_file?id=" + file_id;
+    window.location.replace(edit_url);
 });
