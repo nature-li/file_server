@@ -9,6 +9,7 @@ import (
 // hello world, the web server
 var logger *mtlog.Logger
 var manager session.Manager
+var serverListPort = ":8888"
 var mtLogPath = "/Users/nature/cluster/centos/osx_work/go/http_server/logs"
 var mtLogName = "server"
 var mtLogMaxFileSize int64 = 100 * 1024 * 1024

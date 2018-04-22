@@ -48,7 +48,7 @@ func main() {
 	// 退出登录
 	http.HandleFunc("/user_logout", userLogoutHandler)
 
-	err = http.ListenAndServe(":12345", nil)
+	err = http.ListenAndServe(serverListPort, nil)
 	if err != nil {
 		logger.Error(err.Error())
 	}
