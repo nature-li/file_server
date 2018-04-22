@@ -33,27 +33,32 @@ function changeReloadTips() {
 // 页面加载时
 $(document).ready(function () {
     $("#delete_file_btn").click(function (e) {
-        var file_id = $("#edit_file_id").text();
-
-        // 加载数据
-        $.ajax({
-                url: '/delete_file_api',
-                type: "post",
-                data: {
-                    'file_id': file_id
-                },
-                dataType: 'json',
-                success: function (data) {
-                    handle_delete_file_response(data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 302) {
-                        window.parent.location.replace("/");
-                    } else {
-                        $.showErr("删除失败");
-                    }
-                }
-            }
-        );
+        $.showConfirm("确定要删除吗?", delete_file_after_confirm);
     });
 });
+
+// 确认后删除文件
+function delete_file_after_confirm() {
+    var file_id = $("#edit_file_id").text();
+
+    // 加载数据
+    $.ajax({
+            url: '/delete_file_api',
+            type: "post",
+            data: {
+                'file_id': file_id
+            },
+            dataType: 'json',
+            success: function (data) {
+                handle_delete_file_response(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 302) {
+                    window.parent.location.replace("/");
+                } else {
+                    $.showErr("删除失败");
+                }
+            }
+        }
+    );
+}

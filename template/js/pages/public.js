@@ -22,7 +22,7 @@ $.showConfirm = function (str, func_ok, func_close) {
         title: '确认',
         message: str,
         cssClass: 'bootstrap_center_dialog',
-        type: BootstrapDialog.TYPE_WARNING,
+        type: BootstrapDialog.TYPE_PRIMARY,
         size: BootstrapDialog.SIZE_SMALL,
         draggable: true,
         closable: false,
@@ -33,7 +33,7 @@ $.showConfirm = function (str, func_ok, func_close) {
             }
         },{
             label: '确定',
-            cssClass: 'btn-warning',
+            cssClass: 'btn-primary',
             action: function (dialogItself) {
                 dialogItself.close();
                 func_ok();
