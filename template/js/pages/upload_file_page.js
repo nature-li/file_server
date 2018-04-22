@@ -1,6 +1,14 @@
+var submitting = 0;
+
 // 页面加载时
 $(document).ready(function () {
     $("#upload_file_btn").click(function (e) {
+        submitting += 1;
+        if (submitting > 1) {
+            e.preventDefault();
+            return;
+        }
+
         var file_info = $("#choose_file_for_upload").val();
         if (file_info == "") {
             $("#upload_file_error_label").removeClass("hidden-self");
@@ -27,15 +35,18 @@ $(document).ready(function () {
             },
             success: function(data) {
                 if (data.code == "200") {
+                    submitting = 0;
                     $("#upload_file_form").addClass("no-display");
                     $("#upload_file_form_again").removeClass("no-display");
                 } else {
+                    submitting = 0;
                     $("#upload_file_progress").addClass("hidden-self");
                     $("#upload_file_error_label").removeClass("hidden-self");
                     $("#upload_file_error_label").find("span").html("上传失败");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                submitting = 0;
                 $("#upload_file_progress").addClass("hidden-self");
                 $("#upload_file_error_label").removeClass("hidden-self");
                 $("#upload_file_error_label").find("span").html("上传失败");
