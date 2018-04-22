@@ -12,10 +12,12 @@ import (
 	"database/sql"
 	"encoding/hex"
 	_ "github.com/mattn/go-sqlite3"
+	"server/session"
 )
 
 
 type uploadFileAPI struct {
+	session session.Session
 	RetCode int `json:"code"`
 	Desc string `json:"desc"`
 }
@@ -70,7 +72,8 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 	hexValue := hex.EncodeToString(hash.Sum(nil))
 
 	// 插入数据库
-	httpCode, desc := o.insertToDb(handler.Filename, handler.Size, urlName, fileVersion, hexValue, "lyg", fileDesc)
+	userName := o.session.Get("user_name")
+	httpCode, desc := o.insertToDb(handler.Filename, handler.Size, urlName, fileVersion, hexValue, userName, fileDesc)
 	if httpCode != http.StatusOK {
 		o.deleteFile(newPath)
 		o.render(w, httpCode, desc)

@@ -21,6 +21,6 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{Name: "upload_max_file_limit", Value: strconv.FormatInt(maxUploadSize, 10), Path: "/", HttpOnly: true, MaxAge: 0}
 	http.SetCookie(w, &cookie)
 
-	data := newPageData(w, r)
+	data := newPageData(w, r, s)
 	t.Execute(w, data)
 }

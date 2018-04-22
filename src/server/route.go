@@ -24,12 +24,13 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func userLoginHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
 	t, err := template.ParseFiles("template/html/user_login.html")
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	pageData := newPageData(w, r)
+	pageData := newPageData(w, r, s)
 	t.Execute(w, pageData)
 }
 
@@ -41,7 +42,7 @@ func userLogoutHandler(w http.ResponseWriter, r *http.Request) {
 		logger.Error(err.Error())
 	}
 
-	pageData := newPageData(w, r)
+	pageData := newPageData(w, r, nil)
 	t.Execute(w, pageData)
 }
 
@@ -108,16 +109,19 @@ func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handler := uploadFileAPI{}
+	handler := uploadFileAPI{session:s}
 	handler.handle(w, r)
 }
 
 func listFileAPIHandler(w http.ResponseWriter, r *http.Request) {
-	handler := listFileAPI{}
+	s := manager.SessionStart(w, r)
+	handler := listFileAPI{session:s}
 	handler.handle(w, r)
 }
 
 func editFileHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+
 	err := r.ParseForm()
 	if err != nil {
 		logger.Error(err.Error())
@@ -143,7 +147,7 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	pageData := newPageData(w, r)
+	pageData := newPageData(w, r, s)
 
 	data.pageData = pageData
 	t.Execute(w, data)
@@ -156,11 +160,12 @@ func deleteFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handler := deleteFileAPI{}
+	handler := deleteFileAPI{session:s}
 	handler.handle(w, r)
 }
 
 func userLoginAPIHandler(w http.ResponseWriter, r *http.Request) {
-	handler := userLoginAPI{}
+	s := manager.SessionStart(w, r)
+	handler := userLoginAPI{session:s}
 	handler.handle(w, r)
 }

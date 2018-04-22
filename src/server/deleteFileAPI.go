@@ -8,9 +8,11 @@ import (
 	_"path/filepath"
 	"path/filepath"
 	"os"
+	"server/session"
 )
 
 type deleteFileAPI struct {
+	session session.Session
 	Success bool `json:"success"`
 	Desc string `json:"desc"`
 }

@@ -7,18 +7,6 @@ import (
 	"server/session/cookie"
 )
 
-func logout(w http.ResponseWriter, r *http.Request) {
-	manager.SessionDestroy(w, r)
-	fmt.Fprintln(w, "logout")
-}
-
-func delete(w http.ResponseWriter, r *http.Request) {
-	s := manager.SessionStart(w, r)
-
-	s.Del("name")
-	fmt.Fprintln(w, "deleted")
-}
-
 func main() {
 	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, mtLogPath, mtLogName, mtLogMaxFileSize, mtLogKeepFileCount)
 	if !logger.Start() {

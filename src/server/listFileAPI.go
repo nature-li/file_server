@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"server/session"
 )
 
 type listFileAPI struct {
+	session session.Session
 	Success   string            `json:"success"`
 	ItemCount int               `json:"item_count"`
 	Content   []jsonListFileAPI `json:"content"`

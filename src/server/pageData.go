@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"server/session"
 )
 
 type pageData struct {
@@ -13,7 +14,7 @@ type pageData struct {
 	UploadMaxFileSize string
 }
 
-func newPageData(w http.ResponseWriter, r *http.Request) *pageData {
+func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pageData {
 	// 是否展开侧边栏
 	wrapperClass := ""
 	hiddenClass := ""
@@ -35,10 +36,11 @@ func newPageData(w http.ResponseWriter, r *http.Request) *pageData {
 	// 登录相关
 	var isLogin = false
 	var loginName = ""
-	s := manager.SessionStart(w, r)
-	if s.Get("is_login") == "1" {
-		isLogin = true
-		loginName = s.Get("user_name")
+	if s != nil {
+		if s.Get("is_login") == "1" {
+			isLogin = true
+			loginName = s.Get("user_name")
+		}
 	}
 
 	return &pageData{IsLogin: isLogin, LoginName: loginName, WrapperClass: wrapperClass, PinLock: pinLock, HiddenClass: hiddenClass, UploadMaxFileSize: maxUploadSizeStr}

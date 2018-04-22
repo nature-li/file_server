@@ -8,9 +8,11 @@ import (
 	"encoding/hex"
 	"strings"
 	_ "server/session/cookie"
+	"server/session"
 )
 
 type userLoginAPI struct {
+	session session.Session
 	Success bool `json:"success"`
 	Msg string `json:"message"`
 
@@ -50,9 +52,8 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 
 	success, message := o.checkPassword(userEmail, password)
 	if success == true {
-		s := manager.SessionStart(w, r)
-		s.Set("is_login", "1")
-		s.Set("user_name", o.userName)
+		o.session.Set("is_login", "1")
+		o.session.Set("user_name", o.userName)
 	}
 	o.render(w, success, message)
 }
