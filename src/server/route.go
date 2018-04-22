@@ -120,3 +120,9 @@ func userLoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 	redirectUrl += "&state=test"
 	http.Redirect(w, r, redirectUrl, 302)
 }
+
+func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	handler := userLoginAuthAPI{session:s}
+	handler.handle(w, r)
+}

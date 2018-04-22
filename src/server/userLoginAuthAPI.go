@@ -5,14 +5,18 @@ import (
 	"net/url"
 	"io/ioutil"
 	"encoding/json"
+	"database/sql"
+	"server/session"
 )
 
-type authResult struct {
+type userLoginAuthAPI struct {
 	AccessToken string `json:"access_token"`
 	OpenId      string `json:"openid"`
+
+	session session.Session
 }
 
-func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
+func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 
 	err := r.ParseForm()
@@ -51,8 +55,7 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	logger.Info(string(body))
 
-	var result authResult
-	err = json.Unmarshal(body, &result)
+	err = json.Unmarshal(body, &o)
 	if err != nil {
 		logger.Error(err.Error())
 		userLoginAuthHandler(w, r)
@@ -60,9 +63,9 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	formValue := url.Values {
-		"access_token": {result.AccessToken},
+		"access_token": {o.AccessToken},
 		"appid": {serverAuthAppId},
-		"openid": {result.OpenId},
+		"openid": {o.OpenId},
 	}
 	userResp, err := http.PostForm(serverAuthUserUrl, formValue)
 	if err != nil {
@@ -86,16 +89,62 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var authUserName string
 	if userName, ok := userJson["name"]; ok {
 		if userName != nil {
-			s.Set("is_login", "1")
-			s.Set("user_name", userName.(string))
-			http.Redirect(w, r, "/user_login", 302)
-			return
+			authUserName = userName.(string)
 		}
 	}
 
-	logger.Error(err.Error())
-	userLoginAuthHandler(w, r)
+	var authUserEmail string
+	if userEmail, ok := userJson["email"]; ok {
+		if userEmail != nil {
+			authUserEmail = userEmail.(string)
+		}
+	}
+
+	if authUserEmail == "" {
+		logger.Error("get email empty")
+		userLoginAuthHandler(w, r)
+		return
+	}
+
+	if !o.checkUserExist(authUserEmail) {
+		logger.Error("email not exist in DB")
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	s.Set("is_login", "1")
+	s.Set("user_name", authUserName)
+	http.Redirect(w, r, "/list_file", 302)
 	return
+}
+
+func (o *userLoginAuthAPI) checkUserExist(email string) bool {
+	db, err := sql.Open("sqlite3", sqliteDbPath)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+	defer db.Close()
+
+	querySql := "SELECT id FROM user_list WHERE user_email = ?"
+	rows, err := db.Query(querySql, email)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+	defer rows.Close()
+
+	count := 0
+	for rows.Next() {
+		count++
+	}
+
+	if count > 0 {
+		return true
+	}
+
+	return false
 }
