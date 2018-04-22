@@ -49,7 +49,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if cat != o.session.Get("secret_captcha_value") {
+	if !strings.EqualFold(cat, o.session.Get("secret_captcha_value")) {
 		logger.Error("captcha not match")
 		o.render(w, false, "验证码错误")
 		return
