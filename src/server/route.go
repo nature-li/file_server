@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"html/template"
+	"net/url"
 )
 
 type IndexPageData struct {
@@ -108,4 +109,14 @@ func userLoginAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 	handler := userLoginAPI{session:s}
 	handler.handle(w, r)
+}
+
+func userLoginAuthHandler(w http.ResponseWriter, r *http.Request) {
+	var redirectUrl = ""
+	redirectUrl += "?appid=" + serverAuthAppId
+	redirectUrl += "&response_type=code"
+	redirectUrl += "&redirect_uri=" + url.QueryEscape(serverAuthRedirectUrl)
+	redirectUrl += "&scope=user_info"
+	redirectUrl += "&state=test"
+	http.Redirect(w, r, redirectUrl, 302)
 }

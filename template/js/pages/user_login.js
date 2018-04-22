@@ -39,6 +39,10 @@ $(document).ready(function () {
             }
         );
     });
+
+    $("#btn-oa-login").click(function () {
+        window.parent.location.replace("/user_login_auth");
+    });
 });
 
 function login_callback(data) {
@@ -54,3 +58,4 @@ function show_alert_msg(data) {
     $("#login-alert").html(data);
     $("#login-alert").removeClass("no-display");
 }
+

@@ -22,4 +22,9 @@ var cookieSecret = "5TYHJMGHUIHNrfvgho-0ugbhyhhhjf5r"
 var cookieSessionId = "secret_session_id"
 var cookieAccessTime = "secret_access_time"
 var sessionAliveTime int64 = 15 * 60
+var serverAuthAppId = ""
+var serverAuthRedirectUrl = ""
+var serverAuthAppSecret = ""
+var serverAuthTokenUrl = ""
+var serverAuthUserUrl = ""
 
