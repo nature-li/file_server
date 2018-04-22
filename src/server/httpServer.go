@@ -45,12 +45,9 @@ func main() {
 	// 退出登录
 	http.HandleFunc("/user_logout", userLogoutHandler)
 
-	http.HandleFunc("/test", testHandler)
-	http.HandleFunc("/learn", learnHandler)
-
 	err = http.ListenAndServe(":12345", nil)
 	if err != nil {
-		logger.Fatalf("ListenAndServe: ", err)
+		logger.Error(err.Error())
 	}
 
 	logger.Stop()
