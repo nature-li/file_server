@@ -26,6 +26,9 @@ func main() {
 	dataFs := http.FileServer(http.Dir(httpDataPath))
 	http.Handle("/data/", http.StripPrefix("/data/", dataFs))
 
+	// 图标
+	http.HandleFunc("/favicon.ico", faviconHandler)
+	// 首页
 	http.HandleFunc("/", listFileHandler)
 	// 上传文件
 	http.HandleFunc("/upload_file", uploadFileHandler)

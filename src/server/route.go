@@ -126,3 +126,7 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 	handler := userLoginAuthAPI{session:s}
 	handler.handle(w, r)
 }
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, httpTemplatePath + "/img/favicon.ico")
+}
