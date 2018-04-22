@@ -1,6 +1,14 @@
 // 页面加载时
 $(document).ready(function () {
     $("#upload_file_btn").click(function (e) {
+        var file_info = $("#choose_file_for_upload").val();
+        if (file_info == "") {
+            $("#upload_file_error_label").removeClass("hidden-self");
+            $("#upload_file_error_label").find("span").html("请选择文件");
+            e.preventDefault();
+            return;
+        }
+
         var bar = $('#upload_file_progress_bar');
         var percent = $('#upload_file_process_percent');
 
@@ -24,13 +32,13 @@ $(document).ready(function () {
                 } else {
                     $("#upload_file_progress").addClass("hidden-self");
                     $("#upload_file_error_label").removeClass("hidden-self");
-                    $("#upload_file_error_label").find("span").html("上传失败")
+                    $("#upload_file_error_label").find("span").html("上传失败");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 $("#upload_file_progress").addClass("hidden-self");
                 $("#upload_file_error_label").removeClass("hidden-self");
-                $("#upload_file_error_label").find("span").html("上传失败")
+                $("#upload_file_error_label").find("span").html("上传失败");
             }
         });
     });
@@ -49,6 +57,9 @@ $(document).ready(function () {
         if (this.files.length < 1) {
             return;
         }
+
+        $("#upload_file_error_label").addClass("hidden-self");
+        $("#upload_file_error_label").find("span").html("");
 
         var file = this.files[0];
         var length = file.size / 1024.0 / 1024.0;
