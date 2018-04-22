@@ -9,7 +9,7 @@ import (
 
 type authResult struct {
 	AccessToken string `json:"access_token"`
-	OpenId      string `json:"open_id"`
+	OpenId      string `json:"openid"`
 }
 
 func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
@@ -87,10 +87,12 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if userName, ok := userJson["name"]; ok {
-		s.Set("is_login", "1")
-		s.Set("user_name", userName.(string))
-		http.Redirect(w, r, "/user_login", 302)
-		return
+		if userName != nil {
+			s.Set("is_login", "1")
+			s.Set("user_name", userName.(string))
+			http.Redirect(w, r, "/user_login", 302)
+			return
+		}
 	}
 
 	logger.Error(err.Error())
