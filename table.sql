@@ -19,9 +19,9 @@ CREATE UNIQUE INDEX url_index on file_list (url_name);
 CREATE TABLE user_list (
   id integer primary key autoincrement,
   user_email varchar(255) not null,
-  user_name varchar(255) not null,
-  passwd varchar(255) not null,
-  create_time long not null
+  user_name varchar(255) null,
+  passwd varchar(255) null,
+  create_time long null
 );
 CREATE UNIQUE INDEX user_index on user_list (user_email);
 INSERT INTO user_list(user_email, user_name, passwd, create_time) VALUES ('adtech@meitu.com', '引擎组', 'e10adc3949ba59abbe56e057f20f883e', datetime(1092941466, 'unixepoch'));
