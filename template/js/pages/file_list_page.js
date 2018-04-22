@@ -110,10 +110,6 @@ $(document).ready(function () {
 
 // 详细信息绑定函数
 $(document).on("click", ".a_file_detail", function () {
-    // 希望打开的新页面展示侧边栏
-    $.cookie("pin_nav", 1);
-    $.cookie("pin_lock", 1);
-
     var file_id = $(this).parent().parent().find("td:eq(0)").text();
     var edit_url = "/edit_file?id=" + file_id;
     window.location.replace(edit_url);
