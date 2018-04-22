@@ -93,7 +93,7 @@ func (o *listFileAPI) countDB(db *sql.DB, fileName string) (code int, totalCount
 
 func (o *listFileAPI) queryDB(db *sql.DB, fileName, limit, offset string) (int, string, []jsonListFileAPI) {
 	var err error
-	var dataSql = "SELECT id,file_name,url_name,version,md5_value,create_time FROM file_list"
+	var dataSql = "SELECT id,file_name,file_size,url_name,version,md5_value,create_time FROM file_list"
 	if len(fileName) != 0 {
 		dataSql += " WHERE file_name like ? order by create_time desc limit ? offset ?"
 	} else {
@@ -117,7 +117,7 @@ func (o *listFileAPI) queryDB(db *sql.DB, fileName, limit, offset string) (int, 
 	var rowList []jsonListFileAPI
 	for rows.Next() {
 		row := jsonListFileAPI{}
-		err = rows.Scan(&row.Id, &row.FileName, &row.urlName, &row.Version, &row.Md5, &row.createTime)
+		err = rows.Scan(&row.Id, &row.FileName, &row.FileSize, &row.urlName, &row.Version, &row.Md5, &row.createTime)
 		if err != nil {
 			logger.Error(err.Error())
 			return http.StatusInternalServerError, "QUERY_DB_FAILED", nil

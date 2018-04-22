@@ -70,7 +70,7 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 	hexValue := hex.EncodeToString(hash.Sum(nil))
 
 	// 插入数据库
-	httpCode, desc := o.insertToDb(handler.Filename, urlName, fileVersion, hexValue, "lyg", fileDesc)
+	httpCode, desc := o.insertToDb(handler.Filename, handler.Size, urlName, fileVersion, hexValue, "lyg", fileDesc)
 	if httpCode != http.StatusOK {
 		o.deleteFile(newPath)
 		o.render(w, httpCode, desc)
@@ -115,7 +115,7 @@ func (o *uploadFileAPI)getNewName() string {
 	return nowStr
 }
 
-func (o *uploadFileAPI)insertToDb(fileName, urlName, version, md5, userName, desc string) (int, string) {
+func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, version, md5, userName, desc string) (int, string) {
 	db, err := sql.Open("sqlite3", sqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
@@ -123,7 +123,7 @@ func (o *uploadFileAPI)insertToDb(fileName, urlName, version, md5, userName, des
 	}
 	defer db.Close()
 
-	stmt, err := db.Prepare("INSERT INTO file_list(file_name, url_name, version, md5_value, user_name, desc, create_time, update_time) VALUES(?,?,?,?,?,?,?,?)")
+	stmt, err := db.Prepare("INSERT INTO file_list(file_name, file_size, url_name, version, md5_value, user_name, desc, create_time, update_time) VALUES(?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "DB_PREPARE_FAILED"
@@ -132,7 +132,7 @@ func (o *uploadFileAPI)insertToDb(fileName, urlName, version, md5, userName, des
 
 	createTime := time.Now().Unix()
 	updateTime := createTime
-	_, err = stmt.Exec(fileName, urlName, version, md5, userName, desc, createTime, updateTime)
+	_, err = stmt.Exec(fileName, fileSize, urlName, version, md5, userName, desc, createTime, updateTime)
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "DB_PREPARE_FAILED"

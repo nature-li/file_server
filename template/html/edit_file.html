@@ -120,6 +120,14 @@
                                         class='glyphicon glyphicon-download-alt' aria-hidden='true'></span></a></td>
                             </tr>
                             <tr>
+                                <td class="col-lg-2"><strong>文件大小</strong></td>
+                                <td id="edit_file_version" class="col-lg-10">{{ .RFileSize}}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-2"><strong>文件大小</strong></td>
+                                <td id="edit_file_version" class="col-lg-10">{{ .FileSize}}</td>
+                            </tr>
+                            <tr>
                                 <td class="col-lg-2"><strong>文件版本</strong></td>
                                 <td id="edit_file_version" class="col-lg-10">{{ .Version}}</td>
                             </tr>
@@ -143,16 +151,20 @@
                         </table>
                     </div>
                 </div>
-            {{if .IsLogin}}
                 <div class="row">
                     <div class="col-lg-6">
+                        <button id="back_to_home" type="button" class="btn btn-primary btn-sm"
+                                style="font-size: 15px">
+                            返回列表页
+                        </button>
+                    {{if .IsLogin}}
                         <button id="delete_file_btn" type="button" class="btn btn-primary btn-sm"
                                 style="font-size: 15px">
                             删除
                         </button>
+                    {{end}}
                     </div>
                 </div>
-            {{end}}
             </div>
 
             <div id="back_to_home_tips_row" class="row no-display" style="text-align: center">

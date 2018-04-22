@@ -48,10 +48,26 @@ function update_page_view(page_idx) {
     var html = "";
     for (var i = 0; i < window.save_data.item_list.length; i++) {
         var item = window.save_data.item_list[i];
+        var file_size;
+        if (item.file_size > 1073741824) {
+            length = item.file_size / 1073741824.0;
+            file_size = length.toFixed(2) + "G"
+        } else if (item.file_size > 1048576) {
+            length = item.file_size / 1048576.0;
+            file_size = length.toFixed(2) + "M"
+        } else if (item.file_size > 1024) {
+            length = item.file_size / 1024.0;
+            file_size = length.toFixed(2) + "K"
+        } else {
+            file_size = item.file_size;
+        }
+
+        var length = item.file_size / 1024.0 / 1024.0;
+        length = length.toFixed(2);
         html += "<tr>" +
             "<td style='display:none'>" + item.id + "</td>" +
-            "<td><a href='" + item.file_url + "'download='" + item.file_name + "'><span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span>下载</a></td>" +
-            "<td>" + item.file_name + "</td>" +
+            "<td><a href='" + item.file_url + "'download='" + item.file_name + "'>" + item.file_name + " <span class='glyphicon glyphicon-download-alt' aria-hidden='true'></span></a></td>" +
+            "<td>" + file_size + "</td>" +
             "<td>" + item.version + "</td>" +
             "<td>" + item.create_time + "</td>" +
             "<td>" + item.md5_value + "</td>" +

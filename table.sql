@@ -5,6 +5,7 @@
 CREATE TABLE file_list (
   id integer primary key autoincrement,
   file_name varchar(255) not null,
+  file_size integer not null,
   url_name varchar(255) not null,
   version varchar null,
   md5_value varchar(255) not null,
@@ -13,6 +14,7 @@ CREATE TABLE file_list (
   create_time integer not null,
   update_time integer not null
 );
+CREATE UNIQUE INDEX url_index on file_list (url_name);
 
 CREATE TABLE user_list (
   id integer primary key autoincrement,
