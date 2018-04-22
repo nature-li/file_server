@@ -50,6 +50,8 @@ func main() {
 	http.HandleFunc("/user_login_auth_api", userLoginAuthAPIHandler)
 	// 退出登录
 	http.HandleFunc("/user_logout", userLogoutHandler)
+	// 验证码
+	http.HandleFunc("/captcha", captchaAPIHandler)
 
 	err = http.ListenAndServe(serverListenPort, nil)
 	if err != nil {

@@ -4,17 +4,25 @@ $(document).ready(function () {
     });
 
     $("#btn-login").click(function () {
-        $("#login-alert").addClass("no-display");
         var user_email = $("#login-user-email").val();
         var user_password = $("#login-password").val();
+        var captcha_value = $("#captcha_value").val();
 
         if (!user_email || !user_email.trim()) {
-            show_alert_msg("用户名不能为空");
+            show_alert_msg("用户名为空");
+            change_captcha();
             return;
         }
 
         if (!user_password || !user_password.trim()) {
-            show_alert_msg("密码不能为空");
+            show_alert_msg("密码为空");
+            change_captcha();
+            return;
+        }
+
+        if (!captcha_value || !captcha_value.trim()) {
+            show_alert_msg("验证码为空");
+            change_captcha();
             return;
         }
 
@@ -23,7 +31,8 @@ $(document).ready(function () {
                 type: "post",
                 data: {
                     'user_email': user_email,
-                    'user_password': user_password
+                    'user_password': user_password,
+                    'captcha_value': captcha_value,
                 },
                 dataType: 'json',
                 success: function (response) {
@@ -33,7 +42,8 @@ $(document).ready(function () {
                     if (jqXHR.status == 302) {
                         window.parent.location.replace("/");
                     } else {
-                        show_alert_msg("登录失败")
+                        show_alert_msg("登录失败");
+                        change_captcha();
                     }
                 }
             }
@@ -43,11 +53,16 @@ $(document).ready(function () {
     $("#btn-oa-login").click(function () {
         window.parent.location.replace("/user_login_auth");
     });
+
+    $("#a_for_captcha_img").click(function () {
+        change_captcha();
+    })
 });
 
 function login_callback(data) {
     if (data.success != true) {
         show_alert_msg(data.message);
+        change_captcha();
         return;
     }
 
@@ -55,7 +70,37 @@ function login_callback(data) {
 }
 
 function show_alert_msg(data) {
-    $("#login-alert").html(data);
-    $("#login-alert").removeClass("no-display");
+    $.showErr(data);
+}
+
+function change_captcha() {
+    $.ajax({
+            url: '/captcha',
+            type: "post",
+            dataType: 'json',
+            success: function (response) {
+                get_captcha_callback(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 302) {
+                    window.parent.location.replace("/");
+                } else {
+                    show_alert_msg("GET_CAPTCHA_FAILED");
+                    change_captcha();
+                }
+            }
+        }
+    );
+}
+
+function get_captcha_callback(data) {
+    if (data.success != true) {
+        show_alert_msg("GET_CAPTCHA_FAILED");
+        change_captcha();
+        return
+    }
+
+    var src = "data:image/png;base64," + data.value;
+    $("#captcha_img").attr('src', src);
 }
 

@@ -29,6 +29,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 
 	userEmail := r.Form.Get("user_email")
 	password := r.Form.Get("user_password")
+	cat := r.Form.Get("captcha_value")
 
 	if userEmail == "" {
 		logger.Error("userName is empty")
@@ -39,6 +40,18 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 	if password == "" {
 		logger.Error("password is empty")
 		o.render(w, false, "PASSWORD_EMPTY")
+		return
+	}
+
+	if cat == "" {
+		logger.Error("captcha is empty")
+		o.render(w, false, "PASSWORD_EMPTY")
+		return
+	}
+
+	if cat != o.session.Get("secret_captcha_value") {
+		logger.Error("captcha not match")
+		o.render(w, false, "验证码错误")
 		return
 	}
 

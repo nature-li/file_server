@@ -25,22 +25,31 @@ func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("template/html/user_login.html")
 	if err != nil {
 		logger.Error(err.Error())
+		return
 	}
 
-	pageData := newPageData(w, r, s)
-	t.Execute(w, pageData)
+	handler := newCaptchaHandler(s)
+	_, hex, err := handler.createCaptcha()
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+
+	value := struct {
+		Base64Img string
+		*pageData
+	} {
+		Base64Img: hex,
+		pageData : newPageData(w, r, s),
+	}
+
+	t.Execute(w, value)
 }
 
 func userLogoutHandler(w http.ResponseWriter, r *http.Request) {
 	manager.SessionDestroy(w, r)
 
-	t, err := template.ParseFiles("template/html/user_login.html")
-	if err != nil {
-		logger.Error(err.Error())
-	}
-
-	pageData := newPageData(w, r, nil)
-	t.Execute(w, pageData)
+	http.Redirect(w, r, "/user_login", 302)
 }
 
 func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
@@ -129,4 +138,10 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, httpTemplatePath + "/img/favicon.ico")
+}
+
+func captchaAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	handler := newCaptchaHandler(s)
+	handler.handle(w, r)
 }

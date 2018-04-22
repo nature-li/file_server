@@ -4,10 +4,12 @@
     <title>用户登录</title>
     <link href="/template/css/bootstrap.min.css" rel="stylesheet">
     <link href="/template/css/left/align.css" rel="stylesheet">
+    <link rel="stylesheet" href="/template/css/bootstrap-dialog/bootstrap-dialog.min.css">
 
     <script src="/template/js/jquery.js"></script>
     <script src="/template/js/jquery.cookie.js"></script>
     <script src="/template/js/bootstrap.min.js"></script>
+    <script src="/template/js/bootstrap-dialog/bootstrap-dialog.min.js"></script>
 </head>
 <body>
 
@@ -23,8 +25,6 @@
 
         {{/*panel-body begin*/}}
             <div style="padding-top:30px" class="panel-body">
-                <div id="login-alert" class="alert alert-danger col-sm-12 no-display">abc</div>
-
                 <form id="loginform" class="form-horizontal" role="form">
                 {{/*账号*/}}
                     <div style="margin-bottom: 25px" class="input-group">
@@ -38,6 +38,15 @@
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                         <input id="login-password" type="password" class="form-control" name="password"
                                placeholder="password">
+                    </div>
+
+                    <div style="margin-top:10px" class="form-group">
+                        <div class="col-sm-12 controls">
+                            <input id="captcha_value" type="text" style="height: 40px" placeholder="验证码"/>
+                            <a id="a_for_captcha_img" href="#">
+                            <img id="captcha_img" style="float: right" src="data:image/png;base64,{{.Base64Img}}">
+                            </a>
+                        </div>
                     </div>
 
                 {{/*登录*/}}
