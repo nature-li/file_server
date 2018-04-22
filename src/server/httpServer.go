@@ -54,6 +54,8 @@ func main() {
 	// 登录页面
 	http.HandleFunc("/user_login", userLoginHandler)
 	http.HandleFunc("/user_login_api", userLoginAPIHandler)
+	// 退出登录
+	http.HandleFunc("/user_logout", userLogoutHandler)
 
 	http.HandleFunc("/test", testHandler)
 	http.HandleFunc("/learn", learnHandler)

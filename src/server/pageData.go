@@ -13,7 +13,7 @@ type pageData struct {
 	UploadMaxFileSize string
 }
 
-func newPageData(w http.ResponseWriter, r *http.Request, isLogin bool, loginName string) *pageData {
+func newPageData(w http.ResponseWriter, r *http.Request) *pageData {
 	// 是否展开侧边栏
 	wrapperClass := ""
 	hiddenClass := ""
@@ -30,6 +30,15 @@ func newPageData(w http.ResponseWriter, r *http.Request, isLogin bool, loginName
 		if cookie.Value == "1" {
 			pinLock = "glyphicon-lock"
 		}
+	}
+
+	// 登录相关
+	var isLogin = false
+	var loginName = ""
+	s := manager.SessionStart(w, r)
+	if s.Get("is_login") == "1" {
+		isLogin = true
+		loginName = s.Get("user_name")
 	}
 
 	return &pageData{IsLogin: isLogin, LoginName: loginName, WrapperClass: wrapperClass, PinLock: pinLock, HiddenClass: hiddenClass, UploadMaxFileSize: maxUploadSizeStr}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"errors"
 )
 
 func pkcS7Padding(cipherText []byte, blockSize int) []byte {
@@ -37,6 +38,10 @@ func aesDecrypt(encrypted, key []byte) ([]byte, error) {
 		return nil, err
 	}
 	blockSize := block.BlockSize()
+
+	if len(encrypted) % blockSize != 0 {
+		return nil, errors.New("input not full blocks")
+	}
 	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
 	origData := make([]byte, len(encrypted))
 	blockMode.CryptBlocks(origData, encrypted)

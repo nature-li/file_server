@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 	"html/template"
-	"fmt"
 )
 
 func listFileHandler(w http.ResponseWriter, r *http.Request)  {
@@ -12,9 +11,6 @@ func listFileHandler(w http.ResponseWriter, r *http.Request)  {
 		logger.Error(err.Error())
 	}
 
-	s := manager.SessionStart(w, r)
-	fmt.Println("user_name:", s.Get("user_name"))
-
-	data := newPageData(w, r, true, "lyg")
+	data := newPageData(w, r)
 	t.Execute(w, data)
 }

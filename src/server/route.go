@@ -29,7 +29,19 @@ func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 		logger.Error(err.Error())
 	}
 
-	pageData := newPageData(w, r, true, "lyg")
+	pageData := newPageData(w, r)
+	t.Execute(w, pageData)
+}
+
+func userLogoutHandler(w http.ResponseWriter, r *http.Request) {
+	manager.SessionDestroy(w, r)
+
+	t, err := template.ParseFiles("template/html/user_login.html")
+	if err != nil {
+		logger.Error(err.Error())
+	}
+
+	pageData := newPageData(w, r)
 	t.Execute(w, pageData)
 }
 
@@ -90,6 +102,12 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	if s.Get("is_login") != "1" {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
 	handler := uploadFileAPI{}
 	handler.handle(w, r)
 }
@@ -120,18 +138,24 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if data.Id == 0 {
-		http.Redirect(w, r, "/not_found", 301)
+		http.Redirect(w, r, "/not_found", 302)
 		return
 	}
 
 
-	pageData := newPageData(w, r, true, "lyg")
+	pageData := newPageData(w, r)
 
 	data.pageData = pageData
 	t.Execute(w, data)
 }
 
 func deleteFileAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	if s.Get("is_login") != "1" {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
 	handler := deleteFileAPI{}
 	handler.handle(w, r)
 }

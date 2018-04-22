@@ -5,10 +5,10 @@ $(document).ready(function () {
 
     $("#btn-login").click(function () {
         $("#login-alert").addClass("no-display");
-        var user_name = $("#login-username").val();
+        var user_email = $("#login-user-email").val();
         var user_password = $("#login-password").val();
 
-        if (!user_name || !user_name.trim()) {
+        if (!user_email || !user_email.trim()) {
             show_alert_msg("用户名不能为空");
             return;
         }
@@ -22,7 +22,7 @@ $(document).ready(function () {
                 url: '/user_login_api',
                 type: "post",
                 data: {
-                    'user_name': user_name,
+                    'user_email': user_email,
                     'user_password': user_password
                 },
                 dataType: 'json',
