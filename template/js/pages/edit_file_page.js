@@ -16,7 +16,6 @@ function handle_delete_file_response(data) {
 // 定时任务
 function changeReloadTips() {
     var seconds = $("#jump_after_seconds").text();
-    console.log(seconds);
     if (seconds == "1") {
         if (edit_file_page_interval_func != null) {
             clearInterval(edit_file_page_interval_func);

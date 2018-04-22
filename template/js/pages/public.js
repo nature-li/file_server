@@ -120,6 +120,6 @@ function htmlEncode(value) {
 }
 
 // 返回首页
-$("#back_to_home").click(function (e) {
+$(document).on("click", "#back_to_home", function (e) {
     window.location.replace("/");
 });
