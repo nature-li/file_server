@@ -112,7 +112,7 @@ func userLoginAPIHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func userLoginAuthHandler(w http.ResponseWriter, r *http.Request) {
-	var redirectUrl = ""
+	var redirectUrl = serverAuthAuthUrl
 	redirectUrl += "?appid=" + serverAuthAppId
 	redirectUrl += "&response_type=code"
 	redirectUrl += "&redirect_uri=" + url.QueryEscape(serverAuthRedirectUrl)

@@ -27,4 +27,4 @@ var serverAuthRedirectUrl = ""
 var serverAuthAppSecret = ""
 var serverAuthTokenUrl = ""
 var serverAuthUserUrl = ""
-
+var serverAuthAuthUrl = ""
