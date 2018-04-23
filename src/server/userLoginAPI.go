@@ -55,7 +55,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	o.db, err = sql.Open("sqlite3", sqliteDbPath)
+	o.db, err = sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
 		o.render(w, false, "OPEN_DB_FAILED")

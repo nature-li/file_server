@@ -121,7 +121,8 @@
                     <div>
                         <form action="/upload_file_api" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <small id="emailHelp" class="form-text text-muted">最大允许上传文件大小为: {{ .UploadMaxFileSize}}M
+                                <input id="max_file_limit" class="no-display" value="{{.UploadMaxFileSize}}" />
+                                <small id="emailHelp" class="form-text text-muted">最大允许上传文件大小为: {{ .UploadMaxFileSizeStr}}M
                                 </small>
                                 <input type="file" class="form-control-file" name="uploadFile"
                                        id="choose_file_for_upload">

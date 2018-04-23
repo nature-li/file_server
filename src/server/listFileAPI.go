@@ -28,7 +28,7 @@ func (o *listFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info(r.Form.Encode())
 
-	db, err := sql.Open("sqlite3", sqliteDbPath)
+	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
 		o.render(w, "false", 0, nil)

@@ -24,8 +24,8 @@ type uploadFileAPI struct {
 
 func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 	// 检测文件大小
-	r.Body = http.MaxBytesReader(w, r.Body, maxUploadSize)
-	if err := r.ParseMultipartForm(maxUploadSize); err != nil {
+	r.Body = http.MaxBytesReader(w, r.Body, config.UploadMaxSize)
+	if err := r.ParseMultipartForm(config.UploadMaxSize); err != nil {
 		logger.Error(err.Error())
 		o.render(w, http.StatusBadRequest, "FILE_TOO_BIG")
 		return
@@ -52,7 +52,7 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 
 	// 打开新文件
 	urlName := o.getNewName()
-	newPath := filepath.Join(httpDataPath, urlName)
+	newPath := filepath.Join(config.UploadDataPath, urlName)
 	dstFile, err := os.Create(newPath)
 	if err != nil {
 		logger.Error(err.Error())
@@ -119,7 +119,7 @@ func (o *uploadFileAPI)getNewName() string {
 }
 
 func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, version, md5, userName, desc string) (int, string) {
-	db, err := sql.Open("sqlite3", sqliteDbPath)
+	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "OPEN_DB_FAILED"

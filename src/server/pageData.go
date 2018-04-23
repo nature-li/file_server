@@ -11,7 +11,8 @@ type pageData struct {
 	WrapperClass      string
 	PinLock           string
 	HiddenClass       string
-	UploadMaxFileSize string
+	UploadMaxFileSize int64
+	UploadMaxFileSizeStr string
 }
 
 func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pageData {
@@ -43,5 +44,5 @@ func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pag
 		}
 	}
 
-	return &pageData{IsLogin: isLogin, LoginName: loginName, WrapperClass: wrapperClass, PinLock: pinLock, HiddenClass: hiddenClass, UploadMaxFileSize: maxUploadSizeStr}
+	return &pageData{IsLogin: isLogin, LoginName: loginName, WrapperClass: wrapperClass, PinLock: pinLock, HiddenClass: hiddenClass, UploadMaxFileSize:config.UploadMaxSize, UploadMaxFileSizeStr: config.maxUploadSizeStr}
 }

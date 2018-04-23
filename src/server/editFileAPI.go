@@ -8,7 +8,7 @@ type editFileAPI struct {
 }
 
 func (o *editFileAPI) queryFileList(queryId string) *tableRow {
-	db, err := sql.Open("sqlite3", sqliteDbPath)
+	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil

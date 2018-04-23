@@ -32,7 +32,7 @@ func (o *deleteFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := sql.Open("sqlite3", sqliteDbPath)
+	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
 		o.render(w, false, "OPEN_DB_FAILED")
@@ -89,7 +89,7 @@ func (o *deleteFileAPI) deleteFromDisk(w http.ResponseWriter, db *sql.DB, fileId
 		return false
 	}
 
-	fullPath := filepath.Join(httpDataPath, urlName)
+	fullPath := filepath.Join(config.UploadDataPath, urlName)
 	logger.Info("remove file: " + fullPath)
 	err = os.Remove(fullPath)
 	if err != nil {

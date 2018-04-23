@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"server/session"
 	"encoding/json"
+	"path/filepath"
 )
 
 type captchaHandler struct {
@@ -21,7 +22,7 @@ type captchaHandler struct {
 
 func newCaptchaHandler(s session.Session) *captchaHandler {
 	cat := captcha.New()
-	err := cat.AddFont(captchaFont)
+	err := cat.AddFont(filepath.Join(config.HttpTemplatePath, "fonts/comic.ttf"))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil

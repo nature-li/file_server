@@ -34,12 +34,12 @@ func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 
 	formData := url.Values{
 		"code":         {codeFromAuth},
-		"appid":        {serverAuthAppId},
-		"appsecret":    {serverAuthAppSecret},
-		"redirect_uri": {serverAuthRedirectUrl},
+		"appid":        {config.OauthAppId},
+		"appsecret":    {config.HttpCookieSecret},
+		"redirect_uri": {config.OauthRedirectUrl},
 		"grant_type":   {"auth_code"},
 	}
-	resp, err := http.PostForm(serverAuthTokenUrl, formData)
+	resp, err := http.PostForm(config.OauthTokenUrl, formData)
 	if err != nil {
 		logger.Error(err.Error())
 		userLoginAuthHandler(w, r)
@@ -64,10 +64,10 @@ func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 
 	formValue := url.Values {
 		"access_token": {o.AccessToken},
-		"appid": {serverAuthAppId},
+		"appid": {config.OauthAppId},
 		"openid": {o.OpenId},
 	}
-	userResp, err := http.PostForm(serverAuthUserUrl, formValue)
+	userResp, err := http.PostForm(config.OauthUserUrl, formValue)
 	if err != nil {
 		logger.Error(err.Error())
 		userLoginAuthHandler(w, r)
@@ -122,7 +122,7 @@ func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (o *userLoginAuthAPI) checkUserExist(email string) bool {
-	db, err := sql.Open("sqlite3", sqliteDbPath)
+	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
 		return false

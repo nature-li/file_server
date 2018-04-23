@@ -1,0 +1,10 @@
+1) 准备安装captcha
+echo $GOPATH
+mkdir -p $GOPATH/src/golang.org/x && cd $GOPATH/src/golang.org/x && git clone https://github.com/golang/image.git
+go get github.com/afocus/captcha
+
+2) 安装sqlite驱动
+github.com/mattn/go-sqlite3
+
+3) yaml
+go get gopkg.in/yaml.v2

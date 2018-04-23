@@ -5,25 +5,45 @@ import (
 	"fmt"
 	"mtlog"
 	"server/session/cookie"
+	"flag"
+	"server/session"
 )
 
+var logger *mtlog.Logger
+var manager session.Manager
+var config conf
+
 func main() {
-	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, mtLogPath, mtLogName, mtLogMaxFileSize, mtLogKeepFileCount)
+	var confPath = flag.String("conf", "", "config file path")
+	flag.Parse()
+
+	if *confPath == "" {
+		fmt.Println("conf is empty")
+		return
+	}
+
+	if config.getConf(*confPath) == nil {
+		fmt.Println("parse config file error")
+		return
+	}
+	config.show()
+
+	logger = mtlog.NewLogger(false, mtlog.DEVELOP, mtlog.INFO, config.LogPath, config.LogName, config.LogFileSize, config.LogFileCount)
 	if !logger.Start() {
 		fmt.Println("logger.Start failed")
 	}
 
 	var err error
-	manager, err = cookie.NewManager(cookieSecret, cookieSessionId, cookieAccessTime, sessionAliveTime)
+	manager, err = cookie.NewManager(config.HttpCookieSecret, config.HttpSessionId, config.HttpAccessTime, config.HttpSessionTimeout)
 	if err != nil {
 		logger.Error("NewManager failed")
 		return
 	}
 
-	fs := http.FileServer(http.Dir(httpTemplatePath))
+	fs := http.FileServer(http.Dir(config.HttpTemplatePath))
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
 
-	dataFs := http.FileServer(http.Dir(httpDataPath))
+	dataFs := http.FileServer(http.Dir(config.UploadDataPath))
 	http.Handle("/data/", http.StripPrefix("/data/", dataFs))
 
 	// 图标
@@ -53,7 +73,7 @@ func main() {
 	// 验证码
 	http.HandleFunc("/captcha", captchaAPIHandler)
 
-	err = http.ListenAndServe(serverListenPort, nil)
+	err = http.ListenAndServe(config.HttpListenPort, nil)
 	if err != nil {
 		logger.Error(err.Error())
 	}

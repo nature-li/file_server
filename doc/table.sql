@@ -2,6 +2,7 @@
 #插入数据: INSERT INTO table_name (col1, col2) VALUES(val1, val2);
 #查询数据: SELECT * FROM table_name;
 
+drop table file_list;
 CREATE TABLE file_list (
   id integer primary key autoincrement,
   file_name varchar(255) not null,
@@ -16,6 +17,7 @@ CREATE TABLE file_list (
 );
 CREATE UNIQUE INDEX url_index on file_list (url_name);
 
+drop table user_list;
 CREATE TABLE user_list (
   id integer primary key autoincrement,
   user_email varchar(255) not null,

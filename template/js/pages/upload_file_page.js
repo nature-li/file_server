@@ -6,6 +6,7 @@ $(document).ready(function () {
         submitting += 1;
         if (submitting > 1) {
             e.preventDefault();
+            submitting -= 1;
             return;
         }
 
@@ -14,6 +15,15 @@ $(document).ready(function () {
             $("#upload_file_error_label").removeClass("hidden-self");
             $("#upload_file_error_label").find("span").html("请选择文件");
             e.preventDefault();
+            submitting -= 1;
+            return;
+        }
+
+        var file_size = $('#choose_file_for_upload')[0].files[0].size;
+        var file_limit = $("#max_file_limit").val();
+        if (file_size > file_limit) {
+            e.preventDefault();
+            submitting -= 1;
             return;
         }
 
@@ -77,5 +87,14 @@ $(document).ready(function () {
         length = length.toFixed(2);
         var text = "该文件大小为: " + length + "M";
         $("#check_file_size_label").html(text);
+
+        var file_limit = $("#max_file_limit").val();
+        if (file.size > file_limit) {
+            $("#upload_file_error_label").removeClass("hidden-self");
+            $("#upload_file_error_label").find("span").html("文件过大");
+        } else {
+            $("#upload_file_error_label").addClass("hidden-self");
+            $("#upload_file_error_label").find("span").html("");
+        }
     });
 });

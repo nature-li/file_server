@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"html/template"
 	"net/url"
+	"path/filepath"
 )
 
 type IndexPageData struct {
@@ -12,7 +13,7 @@ type IndexPageData struct {
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("template/html/404.html")
+	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/404.html"))
 	if err != nil {
 		logger.Error(err.Error())
 	}
@@ -22,7 +23,7 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 
 func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
-	t, err := template.ParseFiles("template/html/user_login.html")
+	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/user_login.html"))
 	if err != nil {
 		logger.Error(err.Error())
 		return
@@ -79,7 +80,7 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	queryId := r.Form.Get("id")
 
-	t, err := template.ParseFiles("template/html/edit_file.html")
+	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/edit_file.html"))
 	if err != nil {
 		logger.Error(err.Error())
 		return
@@ -121,10 +122,10 @@ func userLoginAPIHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func userLoginAuthHandler(w http.ResponseWriter, r *http.Request) {
-	var redirectUrl = serverAuthAuthUrl
-	redirectUrl += "?appid=" + serverAuthAppId
+	var redirectUrl = config.OauthAuthUrl
+	redirectUrl += "?appid=" + config.OauthAppId
 	redirectUrl += "&response_type=code"
-	redirectUrl += "&redirect_uri=" + url.QueryEscape(serverAuthRedirectUrl)
+	redirectUrl += "&redirect_uri=" + url.QueryEscape(config.OauthRedirectUrl)
 	redirectUrl += "&scope=user_info"
 	redirectUrl += "&state=test"
 	http.Redirect(w, r, redirectUrl, 302)
@@ -137,7 +138,7 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, httpTemplatePath + "/img/favicon.ico")
+	http.ServeFile(w, r, config.HttpTemplatePath + "/img/favicon.ico")
 }
 
 func captchaAPIHandler(w http.ResponseWriter, r *http.Request) {
