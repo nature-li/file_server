@@ -4,7 +4,7 @@ mkdir -p $GOPATH/src/golang.org/x && cd $GOPATH/src/golang.org/x && git clone ht
 go get github.com/afocus/captcha
 
 2) 安装sqlite驱动
-github.com/mattn/go-sqlite3
+go get github.com/mattn/go-sqlite3
 
 3) yaml
 go get gopkg.in/yaml.v2
