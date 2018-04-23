@@ -7,11 +7,6 @@ import (
 	"path/filepath"
 )
 
-type IndexPageData struct {
-	IsLogin bool
-	LoginName string
-}
-
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/404.html"))
 	if err != nil {

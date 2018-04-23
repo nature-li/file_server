@@ -8,7 +8,7 @@ import (
 	_"path/filepath"
 	"path/filepath"
 	"os"
-	"server/session"
+	"session"
 )
 
 type deleteFileAPI struct {

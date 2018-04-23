@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"fmt"
 	"mtlog"
-	"server/session/cookie"
+	"session/cookie"
 	"flag"
-	"server/session"
+	"session"
 )
 
 var logger *mtlog.Logger

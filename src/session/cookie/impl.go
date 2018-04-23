@@ -5,7 +5,7 @@ import (
 	"time"
 	"net/url"
 	"encoding/base64"
-	"server/session"
+	"session"
 	"crypto/rand"
 	"errors"
 	"strconv"

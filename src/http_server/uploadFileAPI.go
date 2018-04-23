@@ -12,7 +12,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	_ "github.com/mattn/go-sqlite3"
-	"server/session"
+	"session"
 )
 
 

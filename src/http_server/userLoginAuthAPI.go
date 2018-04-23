@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"database/sql"
-	"server/session"
+	"session"
 )
 
 type userLoginAuthAPI struct {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	"server/session"
+	"session"
 )
 
 type pageData struct {

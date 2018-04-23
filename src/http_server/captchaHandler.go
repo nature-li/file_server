@@ -7,7 +7,7 @@ import (
 	"image/jpeg"
 	"encoding/base64"
 	"net/http"
-	"server/session"
+	"session"
 	"encoding/json"
 	"path/filepath"
 )

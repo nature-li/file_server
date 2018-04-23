@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"server/session"
+	"session"
 )
 
 type listFileAPI struct {

@@ -3,7 +3,7 @@ package memory
 import (
 	"sync"
 	"container/list"
-	"server/session"
+	"session"
 	"crypto/rand"
 	"encoding/base64"
 	"net/http"
@@ -17,14 +17,14 @@ var gLock sync.Mutex
 
 type SessionMemory struct {
 	sessionId  string
-	dict       map[string]interface{}
+	dict       map[string]string
 	accessTime time.Time
 
 	manager *Manager
 }
 
 func newSession(sessionId string, manager *Manager, accessTime time.Time) *SessionMemory {
-	return &SessionMemory{sessionId: sessionId, dict: make(map[string]interface{}), accessTime: accessTime, manager: manager}
+	return &SessionMemory{sessionId: sessionId, dict: make(map[string]string), accessTime: accessTime, manager: manager}
 }
 
 func (o *SessionMemory) SessionId() string {
@@ -52,7 +52,7 @@ func (o *SessionMemory) Get(key string) string {
 		return value
 	}
 
-	return nil
+	return ""
 }
 
 func (o *SessionMemory) Del(key string) error {

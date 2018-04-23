@@ -7,8 +7,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"strings"
-	_ "server/session/cookie"
-	"server/session"
+	_ "session/cookie"
+	"session"
 )
 
 type userLoginAPI struct {
