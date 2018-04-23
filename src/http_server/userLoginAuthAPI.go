@@ -35,7 +35,7 @@ func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 	formData := url.Values{
 		"code":         {codeFromAuth},
 		"appid":        {config.OauthAppId},
-		"appsecret":    {config.HttpCookieSecret},
+		"appsecret":    {config.OauthAppSecret},
 		"redirect_uri": {config.OauthRedirectUrl},
 		"grant_type":   {"auth_code"},
 	}
