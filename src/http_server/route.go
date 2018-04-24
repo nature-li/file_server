@@ -313,3 +313,43 @@ func editUserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	handler := editUserAPI{session:s}
 	handler.handle(w, r)
 }
+
+func addUserAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
+		return
+	}
+
+	if !checkRight(s, MANAGER_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
+
+	handler := addUserAPI{session:s}
+	handler.handle(w, r)
+}
+
+func delUserAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
+		return
+	}
+
+	if !checkRight(s, MANAGER_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
+
+	handler := delUserAPI{session:s}
+	handler.handle(w, r)
+}

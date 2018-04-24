@@ -87,6 +87,10 @@ func main() {
 	http.HandleFunc("/list_user_api", listUserAPIHandler)
 	// 编辑用户
 	http.HandleFunc("/edit_user_api", editUserAPIHandler)
+	// 添加用户
+	http.HandleFunc("/add_user_api", addUserAPIHandler)
+	// 删除用户
+	http.HandleFunc("/del_user_api", delUserAPIHandler)
 
 
 	err = http.ListenAndServe(config.HttpListenPort, nil)

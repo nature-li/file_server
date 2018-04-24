@@ -111,7 +111,7 @@ function query_delete_selected_user() {
     // 发送请求删除后台数据
     if (content != '') {
         $.ajax({
-                url: '/delete_user_api',
+                url: '/del_user_api',
                 type: "post",
                 data: {
                     'user_id_list': content
@@ -393,7 +393,7 @@ $("#add_user_button").click(function () {
 
 // 根据ajax返回值更新页面
 function refresh_view(data) {
-    if (data.success == "true") {
+    if (data.success == true) {
         window.location.reload();
     } else {
         $.showErr("添加失败");

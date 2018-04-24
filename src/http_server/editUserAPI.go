@@ -28,7 +28,7 @@ func (o *editUserAPI) handle(w http.ResponseWriter, r *http.Request) {
 	uploadRight := r.Form.Get("upload_right")
 	managerRight := r.Form.Get("manager_right")
 
-	userRight := 0
+	var userRight int64 = 0
 	if downloadRight == "true" {
 		userRight |= DOWNLOAD_RIGHT
 	}
