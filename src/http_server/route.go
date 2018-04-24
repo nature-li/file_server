@@ -238,12 +238,6 @@ func privateFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 检测上传权限
-	if !checkRight(s, DOWNLOAD_RIGHT) {
-		http.Redirect(w, r, "/not_allowed", 302)
-		return
-	}
-
 	dataFs := http.FileServer(http.Dir(config.privateTemplatePath))
 	http.StripPrefix("/templates/private/", dataFs).ServeHTTP(w, r)
 }
