@@ -46,10 +46,6 @@ $(document).ready(function () {
         );
     });
 
-    $("#btn-oa-login").click(function () {
-        window.parent.location.replace("/user_login_auth");
-    });
-
     $("#a_for_captcha_img").click(function () {
         change_captcha();
     })
