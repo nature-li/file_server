@@ -18,6 +18,7 @@ type userLoginAPI struct {
 
 	db *sql.DB
 	userName string
+	userRight string
 }
 
 func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
@@ -67,6 +68,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 	if success == true {
 		o.session.Set("is_login", "1")
 		o.session.Set("user_name", o.userName)
+		o.session.Set("user_right", o.userRight)
 	}
 	o.render(w, success, message)
 }
@@ -90,7 +92,7 @@ func (o *userLoginAPI) render(w http.ResponseWriter, success bool, desc string) 
 func (o *userLoginAPI) checkPassword(email, password string) (success bool, message string) {
 	md5Value := md5.Sum([]byte(password))
 	hexMd5 := hex.EncodeToString(md5Value[:])
-	querySql := "SELECT user_email,user_name,passwd FROM user_list WHERE user_email=?"
+	querySql := "SELECT user_email,user_name,user_right,passwd FROM user_list WHERE user_email=?"
 	rows, err := o.db.Query(querySql, email)
 	if err != nil {
 		logger.Error(err.Error())
@@ -98,15 +100,14 @@ func (o *userLoginAPI) checkPassword(email, password string) (success bool, mess
 	}
 
 	var emailInDB string
-	var passwdInDB string
+	var passwordInDB string
 	var count = 0
 	for rows.Next() {
-		err = rows.Scan(&emailInDB, &o.userName, &passwdInDB)
+		err = rows.Scan(&emailInDB, &o.userName, &o.userRight, &passwordInDB)
 		if err != nil {
 			logger.Error(err.Error())
 			return false, "SCAN_DB_FAILED"
 		}
-
 		count++
 	}
 
@@ -114,7 +115,7 @@ func (o *userLoginAPI) checkPassword(email, password string) (success bool, mess
 		return false, "USER_NOT_EXISTS"
 	}
 
-	if !strings.EqualFold(hexMd5, passwdInDB) {
+	if !strings.EqualFold(hexMd5, passwordInDB) {
 		return false, "PASSWORD_ERROR"
 	}
 

@@ -40,28 +40,19 @@ func main() {
 		return
 	}
 
+	// 模板文件
 	fs := http.FileServer(http.Dir(config.HttpTemplatePath))
 	http.Handle("/template/", http.StripPrefix("/template/", fs))
-
-	dataFs := http.FileServer(http.Dir(config.UploadDataPath))
-	http.Handle("/data/", http.StripPrefix("/data/", dataFs))
-
 	// 图标
 	http.HandleFunc("/favicon.ico", faviconHandler)
-	// 首页
-	http.HandleFunc("/", listFileHandler)
-	// 上传文件
-	http.HandleFunc("/upload_file", uploadFileHandler)
-	http.HandleFunc("/upload_file_api", uploadFileAPIHandler)
-	// 文件列表
-	http.HandleFunc("/list_file", listFileHandler)
-	http.HandleFunc("/file_list_api", listFileAPIHandler)
-	// 编辑文件
-	http.HandleFunc("/edit_file", editFileHandler)
-	// 删除文件
-	http.HandleFunc("/delete_file_api", deleteFileAPIHandler)
+
 	// 404页面
 	http.HandleFunc("/not_found", notFoundHandler)
+	// 拒绝访问页面
+	http.HandleFunc("/not_allowed", notAllowHandler)
+	// 验证码
+	http.HandleFunc("/captcha", captchaAPIHandler)
+
 	// 登录页面
 	http.HandleFunc("/user_login", userLoginHandler)
 	http.HandleFunc("/user_login_api", userLoginAPIHandler)
@@ -70,8 +61,26 @@ func main() {
 	http.HandleFunc("/user_login_auth_api", userLoginAuthAPIHandler)
 	// 退出登录
 	http.HandleFunc("/user_logout", userLogoutHandler)
-	// 验证码
-	http.HandleFunc("/captcha", captchaAPIHandler)
+
+
+	// 下载文件
+	http.HandleFunc("/data/", downloadFileHandler)
+
+	// 首页
+	http.HandleFunc("/", listFileHandler)
+	// 上传文件
+	http.HandleFunc("/upload_file", uploadFileHandler)
+	// 文件列表
+	http.HandleFunc("/list_file", listFileHandler)
+	// 编辑文件
+	http.HandleFunc("/edit_file", editFileHandler)
+
+	// 上传文件
+	http.HandleFunc("/upload_file_api", uploadFileAPIHandler)
+	// 删除文件
+	http.HandleFunc("/delete_file_api", deleteFileAPIHandler)
+	// 文件列表
+	http.HandleFunc("/file_list_api", listFileAPIHandler)
 
 	err = http.ListenAndServe(config.HttpListenPort, nil)
 	if err != nil {

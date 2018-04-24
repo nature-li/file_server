@@ -7,9 +7,16 @@ import (
 )
 
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
+	// 检测是否登录
 	s := manager.SessionStart(w, r)
-	if s.Get("is_login") != "1" {
+	if !checkLogin(s) {
 		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	// 检测上传权限
+	if !checkRight(s, UPLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
 		return
 	}
 

@@ -109,42 +109,48 @@ func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !o.checkUserExist(authUserEmail) {
-		logger.Error("email not exist in DB")
-		http.Redirect(w, r, "/user_login", 302)
+	userRight, ok := o.getUserRight(authUserEmail)
+	if !ok {
+		http.Redirect(w, r, "/not_allowed", 302)
 		return
 	}
 
 	s.Set("is_login", "1")
 	s.Set("user_name", authUserName)
+	s.Set("user_right", userRight)
 	http.Redirect(w, r, "/list_file", 302)
 	return
 }
 
-func (o *userLoginAuthAPI) checkUserExist(email string) bool {
+func (o *userLoginAuthAPI) getUserRight(email string) (userRight string, ok bool) {
+	userRight = ""
+	ok = false
+
 	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
-		return false
+		return
 	}
 	defer db.Close()
 
-	querySql := "SELECT id FROM user_list WHERE user_email = ?"
+	querySql := "SELECT user_right FROM user_list WHERE user_email = ?"
 	rows, err := db.Query(querySql, email)
 	if err != nil {
 		logger.Error(err.Error())
-		return false
+		return
 	}
 	defer rows.Close()
 
-	count := 0
 	for rows.Next() {
-		count++
+		err := rows.Scan(&userRight)
+		if err != nil {
+			logger.Error(err.Error())
+			return
+		}
+
+		ok = true
+		break
 	}
 
-	if count > 0 {
-		return true
-	}
-
-	return false
+	return
 }

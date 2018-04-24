@@ -8,7 +8,15 @@ import (
 
 func listFileHandler(w http.ResponseWriter, r *http.Request)  {
 	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
 
+	if !checkRight(s, DOWNLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
 
 	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/list_file.html"))
 	if err != nil {

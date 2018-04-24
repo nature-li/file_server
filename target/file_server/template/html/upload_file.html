@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>详细信息</title>
+    <title>上传文件</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/template/css/bootstrap.min.css" rel="stylesheet">
@@ -49,13 +49,11 @@
                     </a>
                 </span>
             </li>
-        {{if .DownloadRight}}
             <li id="file_list_menu" class="side-bar-condition-hidden side-bar-menu" style="clear: both">
                 <a href="#">文件列表</a>
             </li>
-        {{end}}
-        {{if  .DownloadRight}}
-            <li id="upload_file_menu" class="side-bar-condition-hidden side-bar-menu">
+        {{if  .IsLogin}}
+            <li id="upload_file_menu" class="side-bar-condition-hidden side-bar-menu chosen-menu">
                 <a href="#">上传文件</a>
             </li>
         {{end}}
@@ -85,11 +83,19 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
+                    {{if .IsLogin}}
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">{{ .LoginName}}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/user_logout">退出</a></li>
                         </ul>
+                    {{else}}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">游客<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/user_login">登录</a></li>
+                        </ul>
+                    {{end}}
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -98,79 +104,60 @@
 
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <div id="file_desc_info_rows">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <table class="table table-bordered">
-                            <tbody>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件编号</strong></td>
-                                <td id="edit_file_id" class="col-lg-10">{{ .Id}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件名称</strong></td>
-                                <td class="col-lg-10"><a id="edit_file_name" href="{{ .FileUrl}}"
-                                                         download="{{ .FileName}}">{{ .FileName}} <span
-                                        class='glyphicon glyphicon-download-alt' aria-hidden='true'></span></a></td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件大小</strong></td>
-                                <td id="edit_file_version" class="col-lg-10">{{ .RFileSize}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件大小</strong></td>
-                                <td id="edit_file_version" class="col-lg-10">{{ .FileSize}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件版本</strong></td>
-                                <td id="edit_file_version" class="col-lg-10">{{ .Version}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>上传时间</strong></td>
-                                <td id="edit_create_time" class="col-lg-10">{{ .CreateTimeFmt}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件md5</strong></td>
-                                <td id="edit_file_md5" class="col-lg-10">{{ .Md5}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>上传者</strong></td>
-                                <td id="edit_file_uploader" class="col-lg-10">{{ .UserName}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>描述信息</strong></td>
-                                <td id="edit_file_desc" class="col-lg-10">{{ .Desc}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <button id="back_to_home" type="button" class="btn btn-primary btn-sm"
-                                style="font-size: 15px">
-                            返回列表页
-                        </button>
-                    {{if .DownloadRight}}
-                        <button id="delete_file_btn" type="button" class="btn btn-primary btn-sm"
-                                style="font-size: 15px">
-                            删除
-                        </button>
-                    {{end}}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="upload_file_progress" class="progress hidden-self">
+                        <div id="upload_file_progress_bar" class="progress-bar" role="progressbar"
+                             aria-valuenow="60"
+                             aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                            <span id="upload_file_process_percent">0%</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="back_to_home_tips_row" class="row no-display" style="text-align: center">
-                <div class="col-lg-12" style="display: inline-block">
-                    <div class="alert alert-success">删除成功, <span id="jump_after_seconds">2</span>秒后返回首页</div>
+            <div id="upload_file_form" class="row">
+                <div class="col-lg-6">
+                    <div>
+                        <form action="/upload_file_api" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <input id="max_file_limit" class="no-display" value="{{.UploadMaxFileSize}}" />
+                                <small id="emailHelp" class="form-text text-muted">最大允许上传文件大小为: {{ .UploadMaxFileSizeStr}}M
+                                </small>
+                                <input type="file" class="form-control-file" name="uploadFile"
+                                       id="choose_file_for_upload">
+                                <small id="check_file_size_label" class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">版本</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1"
+                                       aria-describedby="emailHelp"
+                                       placeholder="输入版本号" maxlength="32" name="file_version">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">描述</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" maxlength="256"
+                                          name="file_desc"></textarea>
+                                <small id="upload_file_error_label" class="form-text text-muted hidden-self">
+                                    <span style="color:red"></span>
+                                </small>
+                            </div>
+                            <button id="upload_file_btn" type="submit" class="btn btn-primary">上传</button>
+                        </form>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div id="back_to_home_btn_row" class="row no-display" style="text-align: center">
-                <div class="col-lg-12" style="display: inline-block">
+        <div id="upload_file_form_again" class="row no-display" style="text-align: center">
+            <div class="col-lg-12" style="display: inline-block">
+                <div>
                     <button id="back_to_home" type="button" class="btn btn-primary btn-lg" style="font-size: 15px">
                         <span class="glyphicon glyphicon-home"></span>返回首页
+                    </button>
+                    <button id="upload_again_btn" type="button" class="btn btn-primary btn-lg"
+                            style="font-size: 15px">
+                        <span class="glyphicon glyphicon-cloud-upload"></span>再传一个
                     </button>
                 </div>
             </div>
@@ -179,7 +166,7 @@
     <!-- /#page-content-wrapper -->
 </div>
 <script src="/template/js/pages/public.js"></script>
-<script src="/template/js/pages/edit_file_page.js"></script>
+<script src="/template/js/pages/upload_file_page.js"></script>
 </body>
 
 </html>

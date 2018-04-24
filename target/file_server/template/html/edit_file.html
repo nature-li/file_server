@@ -49,12 +49,10 @@
                     </a>
                 </span>
             </li>
-        {{if .DownloadRight}}
             <li id="file_list_menu" class="side-bar-condition-hidden side-bar-menu" style="clear: both">
                 <a href="#">文件列表</a>
             </li>
-        {{end}}
-        {{if  .DownloadRight}}
+        {{if  .IsLogin}}
             <li id="upload_file_menu" class="side-bar-condition-hidden side-bar-menu">
                 <a href="#">上传文件</a>
             </li>
@@ -85,11 +83,19 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
+                    {{if .IsLogin}}
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">{{ .LoginName}}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/user_logout">退出</a></li>
                         </ul>
+                    {{else}}
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">游客<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/user_login">登录</a></li>
+                        </ul>
+                    {{end}}
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -151,7 +157,7 @@
                                 style="font-size: 15px">
                             返回列表页
                         </button>
-                    {{if .DownloadRight}}
+                    {{if .IsLogin}}
                         <button id="delete_file_btn" type="button" class="btn btn-primary btn-sm"
                                 style="font-size: 15px">
                             删除

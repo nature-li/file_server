@@ -5,10 +5,21 @@ import (
 	"html/template"
 	"net/url"
 	"path/filepath"
+	"session"
+	"strconv"
 )
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/404.html"))
+	if err != nil {
+		logger.Error(err.Error())
+	}
+
+	t.Execute(w, nil)
+}
+
+func notAllowHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/refuse.html"))
 	if err != nil {
 		logger.Error(err.Error())
 	}
@@ -50,8 +61,15 @@ func userLogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
-	if s.Get("is_login") != "1" {
+	// 检测是否登录
+	if !checkLogin(s) {
 		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	// 检测上传权限
+	if !checkRight(s, UPLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
 		return
 	}
 
@@ -61,12 +79,31 @@ func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 func listFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	if !checkRight(s, DOWNLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
+
 	handler := listFileAPI{session:s}
 	handler.handle(w, r)
 }
 
 func editFileHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	if !checkRight(s, DOWNLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
 
 	err := r.ParseForm()
 	if err != nil {
@@ -101,8 +138,13 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
-	if s.Get("is_login") != "1" {
+	if !checkLogin(s) {
 		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	if !checkRight(s, UPLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
 		return
 	}
 
@@ -140,4 +182,48 @@ func captchaAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 	handler := newCaptchaHandler(s)
 	handler.handle(w, r)
+}
+
+func downloadFileHandler(w http.ResponseWriter, r *http.Request) {
+	// 检测登录
+	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	// 检测上传权限
+	if !checkRight(s, DOWNLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
+
+	dataFs := http.FileServer(http.Dir(config.UploadDataPath))
+	http.StripPrefix("/data/", dataFs).ServeHTTP(w, r)
+}
+
+func checkLogin(s session.Session) bool {
+	isLogin := s.Get("is_login")
+	if isLogin == "1" {
+		return true
+	}
+
+	return false
+}
+
+func checkRight(s session.Session, right int64) bool {
+	var userRight string
+	if userRight = s.Get("user_right"); userRight == "" {
+		return false
+	}
+	digitRight, err := strconv.ParseInt(userRight, 10, 64)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+	if digitRight & right == 0 {
+		return false
+	}
+
+	return true
 }

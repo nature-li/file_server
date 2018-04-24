@@ -3,16 +3,18 @@ package main
 import (
 	"net/http"
 	"session"
+	"strconv"
 )
 
 type pageData struct {
-	IsLogin           bool
-	LoginName         string
-	WrapperClass      string
-	PinLock           string
-	HiddenClass       string
-	UploadMaxFileSize int64
+	LoginName            string
+	WrapperClass         string
+	PinLock              string
+	HiddenClass          string
+	UploadMaxFileSize    int64
 	UploadMaxFileSizeStr string
+	DownloadRight        bool
+	UploadRight          bool
 }
 
 func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pageData {
@@ -35,14 +37,38 @@ func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pag
 	}
 
 	// 登录相关
-	var isLogin = false
 	var loginName = ""
+	var userRight = ""
 	if s != nil {
 		if s.Get("is_login") == "1" {
-			isLogin = true
 			loginName = s.Get("user_name")
+			userRight = s.Get("user_right")
 		}
 	}
 
-	return &pageData{IsLogin: isLogin, LoginName: loginName, WrapperClass: wrapperClass, PinLock: pinLock, HiddenClass: hiddenClass, UploadMaxFileSize:config.UploadMaxSize, UploadMaxFileSizeStr: config.maxUploadSizeStr}
+	digitRight, err := strconv.ParseInt(userRight, 10, 64)
+	if err != nil {
+		logger.Error(err.Error())
+		digitRight = 0
+	}
+
+	downloadRight := false
+	if (digitRight & DOWNLOAD_RIGHT) != 0 {
+		downloadRight = true
+	}
+
+	uploadRight := false
+	if (digitRight & UPLOAD_RIGHT) != 0 {
+		uploadRight = true
+	}
+
+	return &pageData{
+		LoginName:            loginName,
+		WrapperClass:         wrapperClass,
+		PinLock:              pinLock,
+		HiddenClass:          hiddenClass,
+		UploadMaxFileSize:    config.UploadMaxSize,
+		UploadMaxFileSizeStr: config.maxUploadSizeStr,
+		DownloadRight:        downloadRight,
+		UploadRight:          uploadRight}
 }
