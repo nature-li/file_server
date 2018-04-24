@@ -22,7 +22,7 @@ type captchaHandler struct {
 
 func newCaptchaHandler(s session.Session) *captchaHandler {
 	cat := captcha.New()
-	err := cat.AddFont(filepath.Join(config.HttpTemplatePath, "fonts/comic.ttf"))
+	err := cat.AddFont(filepath.Join(config.publicTemplatePath, "fonts/comic.ttf"))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil

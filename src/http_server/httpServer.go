@@ -40,9 +40,11 @@ func main() {
 		return
 	}
 
-	// 模板文件
-	fs := http.FileServer(http.Dir(config.HttpTemplatePath))
-	http.Handle("/template/", http.StripPrefix("/template/", fs))
+	// 公开模板文件
+	publicFs := http.FileServer(http.Dir(config.publicTemplatePath))
+	http.Handle("/templates/public/", http.StripPrefix("/templates/public/", publicFs))
+	// 私有模板文件
+	http.HandleFunc("/templates/private/", privateFileHandler)
 	// 图标
 	http.HandleFunc("/favicon.ico", faviconHandler)
 
@@ -62,10 +64,8 @@ func main() {
 	// 退出登录
 	http.HandleFunc("/user_logout", userLogoutHandler)
 
-
 	// 下载文件
 	http.HandleFunc("/data/", downloadFileHandler)
-
 	// 首页
 	http.HandleFunc("/", listFileHandler)
 	// 上传文件

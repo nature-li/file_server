@@ -43,12 +43,11 @@ func (o *SessionCookie) stringToTime(s string) (time.Time, error) {
 }
 
 func (o *SessionCookie) encodeString(raw string) (string, error) {
-	value, err := aesEncrypt([]byte(raw), []byte(o.manager.secretKey))
+	result, err := encrypt([]byte(o.manager.secretKey), raw)
 	if err != nil {
 		return "", err
 	}
 
-	result := base64.URLEncoding.EncodeToString(value)
 	url.QueryEscape(result)
 	return result, nil
 }
@@ -59,12 +58,7 @@ func (o *SessionCookie) decodeString(secret string) (string, error) {
 		return "", err
 	}
 
-	value, err := base64.URLEncoding.DecodeString(result)
-	if err != nil {
-		return "", err
-	}
-
-	raw, err := aesDecrypt([]byte(value), []byte(o.manager.secretKey))
+	raw, err := decrypt([]byte(o.manager.secretKey), result)
 	if err != nil {
 		return "", err
 	}

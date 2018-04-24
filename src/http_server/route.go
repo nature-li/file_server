@@ -10,7 +10,7 @@ import (
 )
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/404.html"))
+	t, err := template.ParseFiles(filepath.Join(config.privateTemplatePath, "html/404.html"))
 	if err != nil {
 		logger.Error(err.Error())
 	}
@@ -19,7 +19,7 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func notAllowHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/refuse.html"))
+	t, err := template.ParseFiles(filepath.Join(config.privateTemplatePath, "html/refuse.html"))
 	if err != nil {
 		logger.Error(err.Error())
 	}
@@ -29,7 +29,7 @@ func notAllowHandler(w http.ResponseWriter, r *http.Request) {
 
 func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
-	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/user_login.html"))
+	t, err := template.ParseFiles(filepath.Join(config.publicTemplatePath, "html/user_login.html"))
 	if err != nil {
 		logger.Error(err.Error())
 		return
@@ -112,7 +112,7 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	queryId := r.Form.Get("id")
 
-	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/edit_file.html"))
+	t, err := template.ParseFiles(filepath.Join(config.privateTemplatePath, "html/edit_file.html"))
 	if err != nil {
 		logger.Error(err.Error())
 		return
@@ -175,7 +175,7 @@ func userLoginAuthAPIHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, config.HttpTemplatePath + "/img/favicon.ico")
+	http.ServeFile(w, r, config.publicTemplatePath + "/img/favicon.ico")
 }
 
 func captchaAPIHandler(w http.ResponseWriter, r *http.Request) {
@@ -200,6 +200,24 @@ func downloadFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	dataFs := http.FileServer(http.Dir(config.UploadDataPath))
 	http.StripPrefix("/data/", dataFs).ServeHTTP(w, r)
+}
+
+func privateFileHandler(w http.ResponseWriter, r *http.Request) {
+	// 检测登录
+	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		http.Redirect(w, r, "/user_login", 302)
+		return
+	}
+
+	// 检测上传权限
+	if !checkRight(s, DOWNLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
+
+	dataFs := http.FileServer(http.Dir(config.privateTemplatePath))
+	http.StripPrefix("/templates/private/", dataFs).ServeHTTP(w, r)
 }
 
 func checkLogin(s session.Session) bool {

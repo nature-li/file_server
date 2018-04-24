@@ -1,50 +1,55 @@
 package cookie
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"errors"
+	"io"
+	"crypto/rand"
+	"encoding/base64"
 )
 
-func pkcS7Padding(cipherText []byte, blockSize int) []byte {
-	padding := blockSize - len(cipherText)%blockSize
-	padText := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(cipherText, padText...)
-}
-
-func pkcS7UnPadding(origData []byte) []byte {
-	length := len(origData)
-	unPadding := int(origData[length-1])
-	return origData[:(length - unPadding)]
-}
-
-func aesEncrypt(origData, key []byte) ([]byte, error) {
+func encrypt(key []byte, message string) (result string, err error) {
+	plainText := []byte(message)
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, err
+		return
 	}
-	blockSize := block.BlockSize()
-	origData = pkcS7Padding(origData, blockSize)
-	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
-	encrypted := make([]byte, len(origData))
-	blockMode.CryptBlocks(encrypted, origData)
-	return encrypted, nil
+
+	cipherText := make([]byte, aes.BlockSize+len(plainText))
+	iv := cipherText[:aes.BlockSize]
+	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
+		return
+	}
+
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(cipherText[aes.BlockSize:], plainText)
+
+	result = base64.URLEncoding.EncodeToString(cipherText)
+	return
 }
 
-func aesDecrypt(encrypted, key []byte) ([]byte, error) {
+func decrypt(key []byte, message string) (result string, err error) {
+	cipherText, err := base64.URLEncoding.DecodeString(message)
+	if err != nil {
+		return
+	}
+
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, err
+		return
 	}
-	blockSize := block.BlockSize()
 
-	if len(encrypted) % blockSize != 0 {
-		return nil, errors.New("input not full blocks")
+	if len(cipherText) < aes.BlockSize {
+		err = errors.New("CipherText block size is too short")
+		return
 	}
-	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
-	origData := make([]byte, len(encrypted))
-	blockMode.CryptBlocks(origData, encrypted)
-	origData = pkcS7UnPadding(origData)
-	return origData, nil
+
+	iv := cipherText[:aes.BlockSize]
+	cipherText = cipherText[aes.BlockSize:]
+
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(cipherText, cipherText)
+	result = string(cipherText)
+	return
 }

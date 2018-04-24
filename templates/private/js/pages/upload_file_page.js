@@ -98,3 +98,8 @@ $(document).ready(function () {
         }
     });
 });
+
+// 返回首页
+$(document).on("click", "#back_to_home", function (e) {
+    window.location.replace("/");
+});

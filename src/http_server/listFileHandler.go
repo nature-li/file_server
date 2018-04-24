@@ -18,7 +18,7 @@ func listFileHandler(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	t, err := template.ParseFiles(filepath.Join(config.HttpTemplatePath, "html/list_file.html"))
+	t, err := template.ParseFiles(filepath.Join(config.privateTemplatePath, "html/list_file.html"))
 	if err != nil {
 		logger.Error(err.Error())
 	}

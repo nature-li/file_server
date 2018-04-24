@@ -5,34 +5,37 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"strconv"
+	"path/filepath"
 )
 
 type conf struct {
-	LogPath string `yaml:"log_path"`
-	LogName string `yaml:"log_name"`
-	LogFileSize int64 `yaml:"log_file_size"`
-	LogFileCount int `yaml:"log_file_count"`
-	HttpListenPort string `yaml:"http_listen_port"`
-	HttpTemplatePath string `yaml:"http_template_path"`
-	HttpCookieSecret string `yaml:"http_cookie_secret"`
-	HttpSessionId string `yaml:"http_session_id"`
-	HttpAccessTime string `yaml:"http_access_time"`
-	HttpSessionTimeout int64 `yaml:"http_session_timeout"`
-	UploadDataPath string `yaml:"upload_data_path"`
-	UploadMaxSize int64 `yaml:"upload_max_size"`
-	SqliteDbPath string `yaml:"sqlite_db_path"`
-	OauthAppId string `yaml:"oauth_app_id"`
-	OauthAppSecret string `yaml:"oauth_app_secret"`
-	OauthUserUrl string `yaml:"oauth_user_url"`
-	OauthAuthUrl string `yaml:"oauth_auth_url"`
-	OauthRedirectUrl string `yaml:"oauth_redirect_url"`
-	OauthTokenUrl string `yaml:"oauth_token_url"`
+	LogPath            string `yaml:"log_path"`
+	LogName            string `yaml:"log_name"`
+	LogFileSize        int64  `yaml:"log_file_size"`
+	LogFileCount       int    `yaml:"log_file_count"`
+	HttpListenPort     string `yaml:"http_listen_port"`
+	HttpTemplatePath   string `yaml:"http_template_path"`
+	HttpCookieSecret   string `yaml:"http_cookie_secret"`
+	HttpSessionId      string `yaml:"http_session_id"`
+	HttpAccessTime     string `yaml:"http_access_time"`
+	HttpSessionTimeout int64  `yaml:"http_session_timeout"`
+	UploadDataPath     string `yaml:"upload_data_path"`
+	UploadMaxSize      int64  `yaml:"upload_max_size"`
+	SqliteDbPath       string `yaml:"sqlite_db_path"`
+	OauthAppId         string `yaml:"oauth_app_id"`
+	OauthAppSecret     string `yaml:"oauth_app_secret"`
+	OauthUserUrl       string `yaml:"oauth_user_url"`
+	OauthAuthUrl       string `yaml:"oauth_auth_url"`
+	OauthRedirectUrl   string `yaml:"oauth_redirect_url"`
+	OauthTokenUrl      string `yaml:"oauth_token_url"`
 
 	maxUploadSizeStr string
+	publicTemplatePath  string
+	privateTemplatePath string
 }
 
-func (o *conf) getConf(filePath string) *conf {
-	yamlFile, err := ioutil.ReadFile(filePath)
+func (o *conf) getConf(path string) *conf {
+	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil
@@ -44,7 +47,9 @@ func (o *conf) getConf(filePath string) *conf {
 		return nil
 	}
 
-	o.maxUploadSizeStr = strconv.FormatFloat(float64(o.UploadMaxSize) / 1024 / 1024, 'f', 2, 64)
+	o.maxUploadSizeStr = strconv.FormatFloat(float64(o.UploadMaxSize)/1024/1024, 'f', 2, 64)
+	o.publicTemplatePath = filepath.Join(o.HttpTemplatePath, "public")
+	o.privateTemplatePath = filepath.Join(o.HttpTemplatePath, "private")
 	return o
 }
 
