@@ -74,5 +74,5 @@ func (o *conf) show() {
 	fmt.Println("oauth_user_url:", o.OauthUserUrl)
 	fmt.Println("oauth_auth_url:", o.OauthAuthUrl)
 	fmt.Println("oath_token_url:", o.OauthTokenUrl)
-	fmt.Println("server_local_mode", o.ServerLocalMode)
+	fmt.Println("server_local_mode:", o.ServerLocalMode)
 }

@@ -15,6 +15,7 @@ type pageData struct {
 	UploadMaxFileSizeStr string
 	DownloadRight        bool
 	UploadRight          bool
+	UserRight            bool
 }
 
 func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pageData {
@@ -62,6 +63,11 @@ func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pag
 		uploadRight = true
 	}
 
+	managerRight := false
+	if (digitRight & MANAGER_RIGHT) != 0 {
+		managerRight = true
+	}
+
 	return &pageData{
 		LoginName:            loginName,
 		WrapperClass:         wrapperClass,
@@ -70,5 +76,6 @@ func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pag
 		UploadMaxFileSize:    config.UploadMaxSize,
 		UploadMaxFileSizeStr: config.maxUploadSizeStr,
 		DownloadRight:        downloadRight,
-		UploadRight:          uploadRight}
+		UploadRight:          uploadRight,
+		UserRight:            managerRight}
 }

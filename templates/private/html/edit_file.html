@@ -59,6 +59,11 @@
                 <a href="#">上传文件</a>
             </li>
         {{end}}
+        {{if .UserRight}}
+            <li id="user_list_menu" class="side-bar-condition-hidden side-bar-menu">
+                <a href="#">用户列表</a>
+            </li>
+        {{end}}
         </ul>
     </div>
     <!-- /#sidebar-wrapper -->

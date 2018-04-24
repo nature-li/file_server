@@ -25,14 +25,14 @@ CREATE TABLE user_list (
   id integer primary key autoincrement,
   user_email varchar(255) not null,
   user_name varchar(255) default '',
-  user_right integer DEFAULT 1,
+  user_right long DEFAULT 1,
   passwd varchar(255) default '',
   create_time long null
 );
 CREATE UNIQUE INDEX user_index on user_list (user_email);
 -- 下载者
-INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('download@meitu.com', '下载者', 1, 'e10adc3949ba59abbe56e057f20f883e', datetime(1092941466, 'unixepoch'));
+INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('download@meitu.com', '下载者', 1, 'e10adc3949ba59abbe56e057f20f883e', 1092941466);
 -- 上传者
-INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('upload@meitu.com', '上传者', 3, 'e10adc3949ba59abbe56e057f20f883e', datetime(1092941466, 'unixepoch'));
+INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('upload@meitu.com', '上传者', 3, 'e10adc3949ba59abbe56e057f20f883e', null);
 -- 管理员
-INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('manager@meitu.com', '管理员', 7, 'e10adc3949ba59abbe56e057f20f883e', datetime(1092941466, 'unixepoch'));
+INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('lyg@meitu.com', '管理员', 7, 'e10adc3949ba59abbe56e057f20f883e', 1092941466);

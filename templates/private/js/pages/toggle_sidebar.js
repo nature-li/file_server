@@ -56,3 +56,8 @@ $("#file_list_menu").click(function (e) {
 $("#upload_file_menu").click(function (e) {
     window.parent.location.replace("/upload_file");
 });
+
+// 点击用户列表
+$("#user_list_menu").click(function (e) {
+    window.parent.location.replace("/list_user");
+});

@@ -74,6 +74,8 @@ func main() {
 	http.HandleFunc("/list_file", listFileHandler)
 	// 编辑文件
 	http.HandleFunc("/edit_file", editFileHandler)
+	// 用户列表
+	http.HandleFunc("/list_user", listUserHandler)
 
 	// 上传文件
 	http.HandleFunc("/upload_file_api", uploadFileAPIHandler)
@@ -81,6 +83,11 @@ func main() {
 	http.HandleFunc("/delete_file_api", deleteFileAPIHandler)
 	// 文件列表
 	http.HandleFunc("/file_list_api", listFileAPIHandler)
+	// 用户列表
+	http.HandleFunc("/list_user_api", listUserAPIHandler)
+	// 编辑用户
+	http.HandleFunc("/edit_user_api", editUserAPIHandler)
+
 
 	err = http.ListenAndServe(config.HttpListenPort, nil)
 	if err != nil {
