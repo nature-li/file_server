@@ -24,9 +24,9 @@ drop table user_list;
 CREATE TABLE user_list (
   id integer primary key autoincrement,
   user_email varchar(255) not null,
-  user_name varchar(255) null,
+  user_name varchar(255) default '',
   user_right integer DEFAULT 1,
-  passwd varchar(255) null,
+  passwd varchar(255) default '',
   create_time long null
 );
 CREATE UNIQUE INDEX user_index on user_list (user_email);
