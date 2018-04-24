@@ -28,8 +28,9 @@ type conf struct {
 	OauthAuthUrl       string `yaml:"oauth_auth_url"`
 	OauthRedirectUrl   string `yaml:"oauth_redirect_url"`
 	OauthTokenUrl      string `yaml:"oauth_token_url"`
+	ServerLocalMode    bool   `yaml:"server_local_mode"`
 
-	maxUploadSizeStr string
+	maxUploadSizeStr    string
 	publicTemplatePath  string
 	privateTemplatePath string
 }
@@ -73,4 +74,5 @@ func (o *conf) show() {
 	fmt.Println("oauth_user_url:", o.OauthUserUrl)
 	fmt.Println("oauth_auth_url:", o.OauthAuthUrl)
 	fmt.Println("oath_token_url:", o.OauthTokenUrl)
+	fmt.Println("server_local_mode", o.ServerLocalMode)
 }

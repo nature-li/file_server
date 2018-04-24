@@ -10,7 +10,11 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 	// 检测是否登录
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 

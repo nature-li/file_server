@@ -17,3 +17,4 @@ oauth_redirect_url: my_url
 oauth_user_url: user_url
 oauth_auth_url: auth_url
 oauth_token_url: token_url
+server_local_mode: true

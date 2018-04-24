@@ -9,7 +9,11 @@ import (
 func listFileHandler(w http.ResponseWriter, r *http.Request)  {
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 

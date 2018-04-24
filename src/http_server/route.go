@@ -56,14 +56,22 @@ func userLoginHandler(w http.ResponseWriter, r *http.Request) {
 func userLogoutHandler(w http.ResponseWriter, r *http.Request) {
 	manager.SessionDestroy(w, r)
 
-	http.Redirect(w, r, "/user_login", 302)
+	if config.ServerLocalMode {
+		http.Redirect(w, r, "/user_login", 302)
+	} else {
+		http.Redirect(w, r, "/user_login_auth", 302)
+	}
 }
 
 func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 	// 检测是否登录
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 
@@ -80,7 +88,11 @@ func uploadFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 func listFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 
@@ -96,7 +108,11 @@ func listFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 func editFileHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 
@@ -139,7 +155,11 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 func deleteFileAPIHandler(w http.ResponseWriter, r *http.Request) {
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 
@@ -188,7 +208,11 @@ func downloadFileHandler(w http.ResponseWriter, r *http.Request) {
 	// 检测登录
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 
@@ -206,7 +230,11 @@ func privateFileHandler(w http.ResponseWriter, r *http.Request) {
 	// 检测登录
 	s := manager.SessionStart(w, r)
 	if !checkLogin(s) {
-		http.Redirect(w, r, "/user_login", 302)
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
 		return
 	}
 

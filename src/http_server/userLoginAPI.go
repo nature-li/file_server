@@ -34,19 +34,19 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 
 	if userEmail == "" {
 		logger.Error("userName is empty")
-		o.render(w, false, "USER_NAME_EMPTY")
+		o.render(w, false, "用户无效")
 		return
 	}
 
 	if password == "" {
 		logger.Error("password is empty")
-		o.render(w, false, "PASSWORD_EMPTY")
+		o.render(w, false, "密码为空")
 		return
 	}
 
 	if cat == "" {
 		logger.Error("captcha is empty")
-		o.render(w, false, "PASSWORD_EMPTY")
+		o.render(w, false, "验证码空")
 		return
 	}
 
@@ -59,7 +59,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 	o.db, err = sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
-		o.render(w, false, "OPEN_DB_FAILED")
+		o.render(w, false, "内部错误")
 		return
 	}
 	defer o.db.Close()
@@ -96,7 +96,7 @@ func (o *userLoginAPI) checkPassword(email, password string) (success bool, mess
 	rows, err := o.db.Query(querySql, email)
 	if err != nil {
 		logger.Error(err.Error())
-		return false, "QUERY_DB_FAILED"
+		return false, "内部错误"
 	}
 
 	var emailInDB string
@@ -106,18 +106,18 @@ func (o *userLoginAPI) checkPassword(email, password string) (success bool, mess
 		err = rows.Scan(&emailInDB, &o.userName, &o.userRight, &passwordInDB)
 		if err != nil {
 			logger.Error(err.Error())
-			return false, "SCAN_DB_FAILED"
+			return false, "内部错误"
 		}
 		count++
 	}
 
 	if count == 0 {
-		return false, "USER_NOT_EXISTS"
+		return false, "用户无效"
 	}
 
 	if !strings.EqualFold(hexMd5, passwordInDB) {
-		return false, "PASSWORD_ERROR"
+		return false, "密码错误"
 	}
 
-	return true, "SUCCESS"
+	return true, "成功"
 }
