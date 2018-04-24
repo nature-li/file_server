@@ -22,9 +22,9 @@ cp -rf ${GOPATH}/bin/http_server ${TARGET_FILE_SERVER}/bin
 mkdir -p ${TARGET_FILE_SERVER}/config
 cp -rf ${GOPATH}/config/conf.template.yaml ${TARGET_FILE_SERVER}/config
 
-# template
-mkdir -p ${TARGET_FILE_SERVER}/template
-cp -rf ${GOPATH}/template/* ${TARGET_FILE_SERVER}/template
+# templates
+mkdir -p ${TARGET_FILE_SERVER}/templates
+cp -rf ${GOPATH}/templates/* ${TARGET_FILE_SERVER}/templates
 
 # readme
 cp -rf ${GOPATH}/Readme.md ${TARGET_FILE_SERVER}
