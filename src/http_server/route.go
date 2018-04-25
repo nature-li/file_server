@@ -145,10 +145,12 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	pageData := newPageData(w, r, s)
-
 	data.pageData = pageData
+
+	if (data.UserEmail != "") && (data.UserEmail == s.Get("user_email")) {
+		data.ModifyRight = true
+	}
 	t.Execute(w, data)
 }
 

@@ -5,6 +5,7 @@ import (
 	"session"
 	"net/http"
 	"encoding/json"
+	"strconv"
 )
 
 type editFileAPI struct {
@@ -21,7 +22,7 @@ func (o *editFileAPI) queryFileList(queryId string) *tableRow {
 	}
 	defer db.Close()
 
-	querySql := "SELECT id,file_name,file_size,url_name,version,md5_value,user_name,desc,create_time,update_time FROM file_list WHERE id = ?"
+	querySql := "SELECT id,file_name,file_size,url_name,version,md5_value,user_email,user_name,desc,create_time,update_time FROM file_list WHERE id = ?"
 	rows, err := db.Query(querySql, queryId)
 	if err != nil {
 		logger.Error(err.Error())
@@ -31,7 +32,7 @@ func (o *editFileAPI) queryFileList(queryId string) *tableRow {
 
 	row := &tableRow{}
 	for rows.Next() {
-		err = rows.Scan(&row.Id, &row.FileName, &row.FileSize, &row.UrlName, &row.Version, &row.Md5, &row.UserName, &row.Desc, &row.createTime, &row.updateTime)
+		err = rows.Scan(&row.Id, &row.FileName, &row.FileSize, &row.UrlName, &row.Version, &row.Md5, &row.UserEmail, &row.UserName, &row.Desc, &row.createTime, &row.updateTime)
 		if err != nil {
 			logger.Error(err.Error())
 			return nil
@@ -44,6 +45,12 @@ func (o *editFileAPI) queryFileList(queryId string) *tableRow {
 }
 
 func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
+	userEmail := o.session.Get("user_email")
+	if userEmail == "" {
+		o.render(w, false, "USER_EMAIL_EMPTY")
+		return
+	}
+
 	err := r.ParseForm()
 	if err != nil {
 		logger.Error(err.Error())
@@ -77,11 +84,53 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	if !o.checkModifyRight(db, fileId, userEmail) {
+		o.render(w, false, "EDIT_DENIED")
+		return
+	}
+
 	if o.editDB(db, fileId, fileVersion, fileDesc) {
 		o.render(w, true, "SUCCESS")
 	} else {
 		o.render(w, false, "EDIT_DB_FAILED")
 	}
+}
+
+func (o *editFileAPI) checkModifyRight(db *sql.DB, fileId, userEmail string) bool {
+	userRight := o.session.Get("user_right")
+	digitRight, err := strconv.ParseInt(userRight, 10, 64)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+
+	if (digitRight & MANAGER_RIGHT) != 0 {
+		return true
+	}
+
+	querySQL := "select count(1) as count from file_list where user_email = ? and id = ?"
+	logger.Info(querySQL)
+	rows, err := db.Query(querySQL, userEmail, fileId)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+	defer rows.Close()
+
+	var count int
+	for rows.Next() {
+		err := rows.Scan(&count)
+		if err != nil {
+			logger.Error(err.Error())
+			return false
+		}
+	}
+	if count == 0 {
+		logger.Warnf("user_email=?, file_id=? does not exist", userEmail, fileId)
+		return false
+	}
+
+	return true
 }
 
 func (o *editFileAPI) editDB(db *sql.DB, fileId, fileVersion, fileDesc string) bool  {

@@ -116,6 +116,7 @@ func (o *userLoginAuthAPI)handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.Set("is_login", "1")
+	s.Set("user_email", authUserEmail)
 	s.Set("user_name", authUserName)
 	s.Set("user_right", userRight)
 	http.Redirect(w, r, "/list_file", 302)

@@ -8,12 +8,13 @@ import (
 type tableRow struct {
 	Id            int    `json:"id"`
 	FileName      string `json:"file_name"`
-	RFileSize 	  string `json:"r_file_size"`
+	RFileSize     string `json:"r_file_size"`
 	FileSize      int64  `json:"file_size"`
 	UrlName       string `json:"url_name"`
 	FileUrl       string `json:"file_url"`
 	Version       string `json:"version"`
 	Md5           string `json:"md5_value"`
+	UserEmail     string `json:"user_email"`
 	UserName      string `json:"user_name"`
 	CreateTimeFmt string `json:"create_time"`
 	UpdateTimeFmt string `json:"update_time"`

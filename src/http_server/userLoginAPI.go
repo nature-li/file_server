@@ -67,6 +67,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 	success, message := o.checkPassword(userEmail, password)
 	if success == true {
 		o.session.Set("is_login", "1")
+		o.session.Set("user_email", userEmail)
 		o.session.Set("user_name", o.userName)
 		o.session.Set("user_right", o.userRight)
 	}

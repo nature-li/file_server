@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"os"
 	"session"
+	"strconv"
 )
 
 type deleteFileAPI struct {
@@ -18,6 +19,12 @@ type deleteFileAPI struct {
 }
 
 func (o *deleteFileAPI) handle(w http.ResponseWriter, r *http.Request) {
+	userEmail := o.session.Get("user_email")
+	if userEmail == "" {
+		o.render(w, false, "USER_EMAIL_EMPTY")
+		return
+	}
+
 	err := r.ParseForm()
 	if err != nil {
 		logger.Error(err.Error())
@@ -40,6 +47,11 @@ func (o *deleteFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	if !o.checkModifyRight(db, fileId, userEmail) {
+		o.render(w, false, "DELETE_DENIED")
+		return
+	}
+
 	if o.deleteFromDisk(w, db, fileId) {
 		o.deleteFromDB(w, db, fileId)
 	}
@@ -61,6 +73,42 @@ func (o *deleteFileAPI) render(w http.ResponseWriter, success bool, desc string)
 	}
 }
 
+func (o *deleteFileAPI) checkModifyRight(db *sql.DB, fileId, userEmail string) bool {
+	userRight := o.session.Get("user_right")
+	digitRight, err := strconv.ParseInt(userRight, 10, 64)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+
+	if (digitRight & MANAGER_RIGHT) != 0 {
+		return true
+	}
+	
+	querySQL := "select count(1) as count from file_list where user_email = ? and id = ?"
+	logger.Info(querySQL)
+	rows, err := db.Query(querySQL, userEmail, fileId)
+	if err != nil {
+		logger.Error(err.Error())
+		return false
+	}
+	defer rows.Close()
+
+	var count int
+	for rows.Next() {
+		err := rows.Scan(&count)
+		if err != nil {
+			logger.Error(err.Error())
+			return false
+		}
+	}
+	if count == 0 {
+		logger.Warnf("user_email=?, file_id=? does not exist", userEmail, fileId)
+		return false
+	}
+
+	return true
+}
 
 func (o *deleteFileAPI) deleteFromDisk(w http.ResponseWriter, db *sql.DB, fileId string) bool {
 	querySql := "SELECT url_name FROM file_list WHERE id = ?"

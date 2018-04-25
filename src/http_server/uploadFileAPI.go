@@ -135,7 +135,8 @@ func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, vers
 	}
 	defer db.Close()
 
-	stmt, err := db.Prepare("INSERT INTO file_list(file_name, file_size, url_name, version, md5_value, user_name, desc, create_time, update_time) VALUES(?,?,?,?,?,?,?,?,?)")
+	userEmail := o.session.Get("user_email")
+	stmt, err := db.Prepare("INSERT INTO file_list(file_name, file_size, url_name, version, md5_value, user_email, user_name, desc, create_time, update_time) VALUES(?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "DB_PREPARE_FAILED"
@@ -144,7 +145,7 @@ func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, vers
 
 	createTime := time.Now().Unix()
 	updateTime := createTime
-	_, err = stmt.Exec(fileName, fileSize, urlName, version, md5, userName, desc, createTime, updateTime)
+	_, err = stmt.Exec(fileName, fileSize, urlName, version, md5, userEmail, userName, desc, createTime, updateTime)
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "DB_PREPARE_FAILED"

@@ -15,6 +15,7 @@ type pageData struct {
 	UploadMaxFileSizeStr string
 	DownloadRight        bool
 	UploadRight          bool
+	ModifyRight          bool
 	UserRight            bool
 }
 
@@ -64,8 +65,10 @@ func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pag
 	}
 
 	managerRight := false
+	modifyRight := false
 	if (digitRight & MANAGER_RIGHT) != 0 {
 		managerRight = true
+		modifyRight = true
 	}
 
 	return &pageData{
@@ -77,5 +80,6 @@ func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pag
 		UploadMaxFileSizeStr: config.maxUploadSizeStr,
 		DownloadRight:        downloadRight,
 		UploadRight:          uploadRight,
-		UserRight:            managerRight}
+		UserRight:            managerRight,
+		ModifyRight:          modifyRight}
 }
