@@ -84,7 +84,7 @@ func (o *deleteFileAPI) checkModifyRight(db *sql.DB, fileId, userEmail string) b
 	if (digitRight & MANAGER_RIGHT) != 0 {
 		return true
 	}
-	
+
 	querySQL := "select count(1) as count from file_list where user_email = ? and id = ?"
 	logger.Info(querySQL)
 	rows, err := db.Query(querySQL, userEmail, fileId)

@@ -13,6 +13,7 @@ CREATE TABLE file_list (
   url_name varchar(255) not null,
   version varchar(255) null,
   md5_value varchar(255) not null,
+  user_email varchar(255) not null,
   user_name varchar(255) not null,
   desc blob null,
   create_time integer not null,
@@ -20,7 +21,7 @@ CREATE TABLE file_list (
 );
 CREATE UNIQUE INDEX url_index on file_list (url_name);
 
-drop table if exists user_list ;
+drop table if exists user_list;
 CREATE TABLE user_list (
   id integer primary key autoincrement,
   user_email varchar(255) not null,
@@ -30,9 +31,8 @@ CREATE TABLE user_list (
   create_time long null
 );
 CREATE UNIQUE INDEX user_index on user_list (user_email);
--- 下载者
 INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('download', '下载者', 1, 'e10adc3949ba59abbe56e057f20f883e', 1092941466);
--- 上传者
 INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('upload', '上传者', 3, 'e10adc3949ba59abbe56e057f20f883e', null);
--- 管理员
+INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('upload1', '上传者1', 3, 'e10adc3949ba59abbe56e057f20f883e', null);
+INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('upload2', '上传者2', 3, 'e10adc3949ba59abbe56e057f20f883e', null);
 INSERT INTO user_list(user_email, user_name, user_right, passwd, create_time) VALUES ('admin', '管理员', 7, 'e10adc3949ba59abbe56e057f20f883e', 1092941466);

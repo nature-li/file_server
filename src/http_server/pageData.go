@@ -19,6 +19,12 @@ type pageData struct {
 	UserRight            bool
 }
 
+func (o *pageData)reCalcModifyRight(loginEmail, uploaderEmail string) {
+	if (loginEmail != "") && (loginEmail == uploaderEmail) {
+		o.ModifyRight = true
+	}
+}
+
 func newPageData(w http.ResponseWriter, r *http.Request, s session.Session) *pageData {
 	// 是否展开侧边栏
 	wrapperClass := ""
