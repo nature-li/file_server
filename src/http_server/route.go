@@ -134,7 +134,7 @@ func editFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handler := editFileAPI{}
+	handler := editFileAPI{session:s}
 	data := handler.queryFileList(queryId)
 	if data == nil {
 		return
@@ -346,4 +346,24 @@ func delUserAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	handler := delUserAPI{session:s}
 	handler.handle(w, r)
+}
+
+func editFileAPIHandler(w http.ResponseWriter, r *http.Request) {
+	s := manager.SessionStart(w, r)
+	if !checkLogin(s) {
+		if config.ServerLocalMode {
+			http.Redirect(w, r, "/user_login", 302)
+		} else {
+			http.Redirect(w, r, "/user_login_auth", 302)
+		}
+		return
+	}
+
+	if !checkRight(s, UPLOAD_RIGHT) {
+		http.Redirect(w, r, "/not_allowed", 302)
+		return
+	}
+
+	handler := editFileAPI{session:s}
+	handler.editFile(w, r)
 }

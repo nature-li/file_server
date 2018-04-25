@@ -120,15 +120,11 @@
                             </tr>
                             <tr>
                                 <td class="col-lg-2"><strong>文件大小</strong></td>
-                                <td id="edit_file_version" class="col-lg-10">{{ .RFileSize}}</td>
+                                <td id="edit_file_readable_size" class="col-lg-10">{{ .RFileSize}}</td>
                             </tr>
                             <tr>
                                 <td class="col-lg-2"><strong>文件大小</strong></td>
-                                <td id="edit_file_version" class="col-lg-10">{{ .FileSize}}</td>
-                            </tr>
-                            <tr>
-                                <td class="col-lg-2"><strong>文件版本</strong></td>
-                                <td id="edit_file_version" class="col-lg-10">{{ .Version}}</td>
+                                <td id="edit_file_size" class="col-lg-10">{{ .FileSize}}</td>
                             </tr>
                             <tr>
                                 <td class="col-lg-2"><strong>上传时间</strong></td>
@@ -141,6 +137,10 @@
                             <tr>
                                 <td class="col-lg-2"><strong>上传者</strong></td>
                                 <td id="edit_file_uploader" class="col-lg-10">{{ .UserName}}</td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-2"><strong>文件版本</strong></td>
+                                <td id="edit_file_version" class="col-lg-10">{{ .Version}}</td>
                             </tr>
                             <tr>
                                 <td class="col-lg-2"><strong>描述信息</strong></td>
@@ -157,8 +157,16 @@
                             返回列表页
                         </button>
                     {{if .UploadRight}}
+                        <button id="edit_file_btn" type="button" class="btn btn-primary btn-sm"
+                                style="font-size: 15px; float: right">
+                            编辑
+                        </button>
+                        <button id="submit_file_btn" type="button" class="btn btn-primary btn-sm no-display"
+                                style="font-size: 15px; float: right">
+                            提交
+                        </button>
                         <button id="delete_file_btn" type="button" class="btn btn-primary btn-sm"
-                                style="font-size: 15px">
+                                style="font-size: 15px; float: right; margin: 0 10px 0 0">
                             删除
                         </button>
                     {{end}}
