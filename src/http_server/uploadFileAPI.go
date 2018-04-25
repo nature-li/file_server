@@ -33,13 +33,11 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 	fileDesc := r.Form.Get("file_desc")
 
 	// 检测数据长度
-	version := []rune(fileVersion)
-	if len(version) > MAX_VERSION_LEN {
+	if len([]rune(fileVersion)) > MAX_VERSION_LEN {
 		o.render(w, http.StatusBadRequest, "FILE_VERSION_BIG")
 		return
 	}
-	desc := []rune(fileDesc)
-	if len(desc) > MAX_DESC_LEN {
+	if len([]rune(fileDesc)) > MAX_DESC_LEN {
 		o.render(w, http.StatusBadRequest, "FILE_DESC_BIG")
 		return
 	}

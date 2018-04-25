@@ -60,13 +60,11 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 	fileDesc := r.Form.Get("file_desc")
 
 	// 检测数据长度
-	version := []rune(fileVersion)
-	if len(version) > MAX_VERSION_LEN {
+	if len([]rune(fileVersion)) > MAX_VERSION_LEN {
 		o.render(w, false, "FILE_VERSION_BIG")
 		return
 	}
-	desc := []rune(fileDesc)
-	if len(desc) > MAX_DESC_LEN {
+	if len([]rune(fileDesc)) > MAX_DESC_LEN {
 		o.render(w, false, "FILE_DESC_BIG")
 		return
 	}
