@@ -17,7 +17,8 @@ CREATE TABLE file_list (
   user_name varchar(255) not null,
   desc blob null,
   create_time integer not null,
-  update_time integer not null
+  update_time integer not null,
+  refer_link varchar(255) default ''
 );
 CREATE UNIQUE INDEX url_index on file_list (url_name);
 
