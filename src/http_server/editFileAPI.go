@@ -49,7 +49,6 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 		logger.Error(err.Error())
 		return
 	}
-
 	logger.Info(r.Form.Encode())
 
 	fileId := r.Form.Get("file_id")
@@ -59,6 +58,18 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 	}
 	fileVersion := r.Form.Get("file_version")
 	fileDesc := r.Form.Get("file_desc")
+
+	// 检测数据长度
+	version := []rune(fileVersion)
+	if len(version) > MAX_VERSION_LEN {
+		o.render(w, false, "FILE_VERSION_BIG")
+		return
+	}
+	desc := []rune(fileDesc)
+	if len(desc) > MAX_DESC_LEN {
+		o.render(w, false, "FILE_DESC_BIG")
+		return
+	}
 
 	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {

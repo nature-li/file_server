@@ -11,7 +11,7 @@ CREATE TABLE file_list (
   file_name varchar(255) not null,
   file_size integer not null,
   url_name varchar(255) not null,
-  version varchar null,
+  version varchar(255) null,
   md5_value varchar(255) not null,
   user_name varchar(255) not null,
   desc blob null,

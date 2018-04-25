@@ -73,10 +73,10 @@ $(document).on("click", "#back_to_home", function (e) {
 // 编辑按钮
 $(document).on("click", "#edit_file_btn", function (e) {
     old_file_version = $("#edit_file_version").text();
-    $("#edit_file_version").html("<input id='new_file_version' type='text' class='form-control' value='" + old_file_version + "'/>");
+    $("#edit_file_version").html("<input id='new_file_version' type='text' class='form-control' maxlength='32' value='" + old_file_version + "'/>");
 
     old_file_desc = $("#edit_file_desc").text();
-    $("#edit_file_desc").html("<textarea id='new_file_desc' class='form-control' rows='10'>" + old_file_desc + "</textarea>")
+    $("#edit_file_desc").html("<textarea id='new_file_desc' class='form-control' rows='10' maxlength='1024'>" + old_file_desc + "</textarea>")
 
     $("#edit_file_btn").addClass("no-display");
     $("#submit_file_btn").removeClass("no-display");

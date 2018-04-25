@@ -23,6 +23,27 @@ type uploadFileAPI struct {
 }
 
 func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		logger.Error(err.Error())
+		o.render(w, http.StatusInternalServerError, "PARSE_FORM_FAILED")
+		return
+	}
+	fileVersion := r.Form.Get("file_version")
+	fileDesc := r.Form.Get("file_desc")
+
+	// 检测数据长度
+	version := []rune(fileVersion)
+	if len(version) > MAX_VERSION_LEN {
+		o.render(w, http.StatusBadRequest, "FILE_VERSION_BIG")
+		return
+	}
+	desc := []rune(fileDesc)
+	if len(desc) > MAX_DESC_LEN {
+		o.render(w, http.StatusBadRequest, "FILE_DESC_BIG")
+		return
+	}
+
 	// 检测文件大小
 	r.Body = http.MaxBytesReader(w, r.Body, config.UploadMaxSize)
 	if err := r.ParseMultipartForm(config.UploadMaxSize); err != nil {
@@ -30,16 +51,6 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 		o.render(w, http.StatusBadRequest, "FILE_TOO_BIG")
 		return
 	}
-
-	err := r.ParseForm()
-	if err != nil {
-		logger.Error(err.Error())
-		o.render(w, http.StatusInternalServerError, "PARSE_FORM_FAILED")
-		return
-	}
-
-	fileVersion := r.Form.Get("file_version")
-	fileDesc := r.Form.Get("file_desc")
 
 	// 打开旧文件
 	srcFile, handler, err := r.FormFile("uploadFile")
