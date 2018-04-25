@@ -23,6 +23,14 @@ type uploadFileAPI struct {
 }
 
 func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
+	// 检测文件大小
+	r.Body = http.MaxBytesReader(w, r.Body, config.UploadMaxSize)
+	if err := r.ParseMultipartForm(config.UploadMaxSize); err != nil {
+		logger.Error(err.Error())
+		o.render(w, http.StatusBadRequest, "FILE_TOO_BIG")
+		return
+	}
+
 	err := r.ParseForm()
 	if err != nil {
 		logger.Error(err.Error())
@@ -39,14 +47,6 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 	}
 	if len([]rune(fileDesc)) > MAX_DESC_LEN {
 		o.render(w, http.StatusBadRequest, "FILE_DESC_BIG")
-		return
-	}
-
-	// 检测文件大小
-	r.Body = http.MaxBytesReader(w, r.Body, config.UploadMaxSize)
-	if err := r.ParseMultipartForm(config.UploadMaxSize); err != nil {
-		logger.Error(err.Error())
-		o.render(w, http.StatusBadRequest, "FILE_TOO_BIG")
 		return
 	}
 
