@@ -1,5 +1,6 @@
 var edit_file_page_interval_func = null;
 var old_file_version = "";
+var old_refer_link = "";
 var old_file_desc = "";
 
 // init_edit_page
@@ -75,6 +76,9 @@ $(document).on("click", "#edit_file_btn", function (e) {
     old_file_version = $("#edit_file_version").text();
     $("#edit_file_version").html("<input id='new_file_version' type='text' class='form-control' maxlength='32' value='" + old_file_version + "'/>");
 
+    old_refer_link = $("#a_edit_refer_link").attr("href");
+    $("#td_edit_refer_link").html("<input id='new_refer_link' type='text' class='form-control' maxlength='32' value='" + old_refer_link + "'/>");
+
     old_file_desc = $("#edit_file_desc").text();
     $("#edit_file_desc").html("<textarea id='new_file_desc' class='form-control' rows='10' maxlength='1024'>" + old_file_desc + "</textarea>")
 
@@ -85,10 +89,14 @@ $(document).on("click", "#edit_file_btn", function (e) {
 // 提交按钮
 $(document).on("click", "#submit_file_btn", function (e) {
     var new_file_version = $("#new_file_version").val();
+    var new_refer_link = $("#new_refer_link").val();
     var new_file_desc = $("#new_file_desc").val();
 
-    if (old_file_version === new_file_version && old_file_desc === new_file_desc) {
+    if (old_file_version === new_file_version
+        && old_refer_link === new_refer_link
+        && old_file_desc === new_file_desc) {
         $("#edit_file_version").html(old_file_version);
+        $("#td_edit_refer_link").html('<a id="a_edit_refer_link" target="_blank" href="' + old_refer_link + '">' + old_refer_link + '</a>');
         $("#edit_file_desc").html(old_file_desc);
         $("#edit_file_btn").removeClass("no-display");
         $("#submit_file_btn").addClass("no-display");
@@ -101,6 +109,7 @@ $(document).on("click", "#submit_file_btn", function (e) {
             data: {
                 'file_id': $("#edit_file_id").text(),
                 'file_version': new_file_version,
+                'file_refer_link': new_refer_link,
                 'file_desc': new_file_desc
             },
             dataType: 'json',
@@ -131,6 +140,7 @@ function edit_file_call_back(data) {
 // 编辑失败
 function edit_file_failed() {
     $("#edit_file_version").html(old_file_version);
+    $("#td_edit_refer_link").html('<a id="a_edit_refer_link" target="_blank" href="' + old_refer_link + '">' + old_refer_link + '</a>');
     $("#edit_file_desc").html(old_file_desc);
     $("#edit_file_btn").removeClass("no-display");
     $("#submit_file_btn").addClass("no-display");

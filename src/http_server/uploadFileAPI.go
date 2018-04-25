@@ -38,11 +38,16 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fileVersion := r.Form.Get("file_version")
+	fileReferLink := r.Form.Get("file_refer_link")
 	fileDesc := r.Form.Get("file_desc")
 
 	// 检测数据长度
 	if len([]rune(fileVersion)) > MAX_VERSION_LEN {
 		o.render(w, http.StatusBadRequest, "FILE_VERSION_BIG")
+		return
+	}
+	if len([]rune(fileReferLink)) > MAX_LINK_LEN {
+		o.render(w, http.StatusBadRequest, "REFER_LINK_BIG")
 		return
 	}
 	if len([]rune(fileDesc)) > MAX_DESC_LEN {
@@ -82,7 +87,7 @@ func (o *uploadFileAPI)handle(w http.ResponseWriter, r *http.Request) {
 
 	// 插入数据库
 	userName := o.session.Get("user_name")
-	httpCode, desc := o.insertToDb(handler.Filename, handler.Size, urlName, fileVersion, hexValue, userName, fileDesc)
+	httpCode, desc := o.insertToDb(handler.Filename, handler.Size, urlName, fileVersion, hexValue, userName, fileDesc, fileReferLink)
 	if httpCode != http.StatusOK {
 		o.deleteFile(newPath)
 		o.render(w, httpCode, desc)
@@ -127,7 +132,7 @@ func (o *uploadFileAPI)getNewName() string {
 	return nowStr
 }
 
-func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, version, md5, userName, desc string) (int, string) {
+func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, version, md5, userName, desc, referLink string) (int, string) {
 	db, err := sql.Open("sqlite3", config.SqliteDbPath)
 	if err != nil {
 		logger.Error(err.Error())
@@ -137,7 +142,7 @@ func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, vers
 	db.Exec("PRAGMA busy_timeout=30000")
 
 	userEmail := o.session.Get("user_email")
-	stmt, err := db.Prepare("INSERT INTO file_list(file_name, file_size, url_name, version, md5_value, user_email, user_name, desc, create_time, update_time) VALUES(?,?,?,?,?,?,?,?,?,?)")
+	stmt, err := db.Prepare("INSERT INTO file_list(file_name, file_size, url_name, version, md5_value, user_email, user_name, desc, create_time, update_time, refer_link) VALUES(?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "DB_PREPARE_FAILED"
@@ -146,7 +151,7 @@ func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, vers
 
 	createTime := time.Now().Unix()
 	updateTime := createTime
-	_, err = stmt.Exec(fileName, fileSize, urlName, version, md5, userEmail, userName, desc, createTime, updateTime)
+	_, err = stmt.Exec(fileName, fileSize, urlName, version, md5, userEmail, userName, desc, createTime, updateTime, referLink)
 	if err != nil {
 		logger.Error(err.Error())
 		return http.StatusInternalServerError, "DB_PREPARE_FAILED"

@@ -19,6 +19,7 @@ type tableRow struct {
 	CreateTimeFmt string `json:"create_time"`
 	UpdateTimeFmt string `json:"update_time"`
 	Desc          string `json:"all_desc"`
+	ReferLink     string `json:"refer_link"`
 
 	*pageData
 	createTime string

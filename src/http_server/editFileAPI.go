@@ -23,7 +23,7 @@ func (o *editFileAPI) queryFileList(queryId string) *tableRow {
 	defer db.Close()
 	db.Exec("PRAGMA busy_timeout=30000")
 
-	querySql := "SELECT id,file_name,file_size,url_name,version,md5_value,user_email,user_name,desc,create_time,update_time FROM file_list WHERE id = ?"
+	querySql := "SELECT id,file_name,file_size,url_name,version,md5_value,user_email,user_name,desc,create_time,update_time,refer_link FROM file_list WHERE id = ?"
 	rows, err := db.Query(querySql, queryId)
 	if err != nil {
 		logger.Error(err.Error())
@@ -33,7 +33,7 @@ func (o *editFileAPI) queryFileList(queryId string) *tableRow {
 
 	row := &tableRow{}
 	for rows.Next() {
-		err = rows.Scan(&row.Id, &row.FileName, &row.FileSize, &row.UrlName, &row.Version, &row.Md5, &row.UserEmail, &row.UserName, &row.Desc, &row.createTime, &row.updateTime)
+		err = rows.Scan(&row.Id, &row.FileName, &row.FileSize, &row.UrlName, &row.Version, &row.Md5, &row.UserEmail, &row.UserName, &row.Desc, &row.createTime, &row.updateTime, &row.ReferLink)
 		if err != nil {
 			logger.Error(err.Error())
 			return nil
@@ -65,11 +65,16 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fileVersion := r.Form.Get("file_version")
+	fileReferLink := r.Form.Get("file_refer_link")
 	fileDesc := r.Form.Get("file_desc")
 
 	// 检测数据长度
 	if len([]rune(fileVersion)) > MAX_VERSION_LEN {
 		o.render(w, false, "FILE_VERSION_BIG")
+		return
+	}
+	if len([]rune(fileReferLink)) > MAX_LINK_LEN {
+		o.render(w, false, "REFER_LINK_BIG")
 		return
 	}
 	if len([]rune(fileDesc)) > MAX_DESC_LEN {
@@ -91,7 +96,7 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if o.editDB(db, fileId, fileVersion, fileDesc) {
+	if o.editDB(db, fileId, fileVersion, fileDesc, fileReferLink) {
 		o.render(w, true, "SUCCESS")
 	} else {
 		o.render(w, false, "EDIT_DB_FAILED")
@@ -135,10 +140,10 @@ func (o *editFileAPI) checkModifyRight(db *sql.DB, fileId, userEmail string) boo
 	return true
 }
 
-func (o *editFileAPI) editDB(db *sql.DB, fileId, fileVersion, fileDesc string) bool  {
-	querySql := "update file_list set version=?, desc=? where id=?"
+func (o *editFileAPI) editDB(db *sql.DB, fileId, fileVersion, fileDesc, referLink string) bool  {
+	querySql := "update file_list set version=?, desc=?, refer_link=? where id=?"
 	logger.Info(querySql)
-	rows, err := db.Exec(querySql, fileVersion, fileDesc, fileId)
+	rows, err := db.Exec(querySql, fileVersion, fileDesc, referLink, fileId)
 	if err != nil {
 		logger.Error(err.Error())
 		return false
