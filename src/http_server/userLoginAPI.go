@@ -63,6 +63,7 @@ func (o *userLoginAPI) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer o.db.Close()
+	o.db.Exec("PRAGMA busy_timeout=30000")
 
 	success, message := o.checkPassword(userEmail, password)
 	if success == true {

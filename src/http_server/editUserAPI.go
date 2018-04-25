@@ -47,6 +47,7 @@ func (o *editUserAPI) handle(w http.ResponseWriter, r *http.Request) {
 		o.render(w, false, "OPEN_DB_ERROR", nil)
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	if !o.updateRight(db, userId, int64(userRight)) {
 		o.render(w, false, "UPDATE_DB_FAILED", nil)

@@ -46,6 +46,7 @@ func (o *deleteFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	if !o.checkModifyRight(db, fileId, userEmail) {
 		o.render(w, false, "DELETE_DENIED")

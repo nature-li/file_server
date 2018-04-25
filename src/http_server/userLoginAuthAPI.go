@@ -133,6 +133,7 @@ func (o *userLoginAuthAPI) getUserRight(email string) (userRight string, ok bool
 		return
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	querySql := "SELECT user_right FROM user_list WHERE user_email = ?"
 	rows, err := db.Query(querySql, email)

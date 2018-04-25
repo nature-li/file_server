@@ -36,6 +36,7 @@ func (o *delUserAPI) handle(w http.ResponseWriter, r *http.Request) {
 		o.render(w, false, "OPEN_DB_FAILED")
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	if !o.delUser(db, userIdList) {
 		o.render(w, false, "DEL_USER_FAILED")

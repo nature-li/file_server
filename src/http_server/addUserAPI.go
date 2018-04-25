@@ -54,6 +54,7 @@ func (o *addUserAPI) handle(w http.ResponseWriter, r *http.Request) {
 		o.render(w, false, "OPEN_DB_FAILED")
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	if !o.addUser(db, userEmail, userRight) {
 		o.render(w, false, "ADD_USER_FAILED")

@@ -34,6 +34,7 @@ func (o *listFileAPI) handle(w http.ResponseWriter, r *http.Request) {
 		o.render(w, "false", 0, nil)
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	code, totalCount := o.countDB(db, fileName)
 	if code != http.StatusOK {

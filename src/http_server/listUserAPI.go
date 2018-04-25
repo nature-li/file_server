@@ -56,6 +56,7 @@ func (o *listUserAPI) handle(w http.ResponseWriter, r *http.Request) {
 		o.render(w, "false", 0, nil)
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	code, totalCount := o.countDB(db, userEmail)
 	if code != http.StatusOK {

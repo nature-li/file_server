@@ -21,6 +21,7 @@ func (o *editFileAPI) queryFileList(queryId string) *tableRow {
 		return nil
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	querySql := "SELECT id,file_name,file_size,url_name,version,md5_value,user_email,user_name,desc,create_time,update_time FROM file_list WHERE id = ?"
 	rows, err := db.Query(querySql, queryId)
@@ -83,6 +84,7 @@ func (o *editFileAPI) editFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	if !o.checkModifyRight(db, fileId, userEmail) {
 		o.render(w, false, "EDIT_DENIED")

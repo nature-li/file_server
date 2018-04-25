@@ -134,6 +134,7 @@ func (o *uploadFileAPI)insertToDb(fileName string, fileSize int64, urlName, vers
 		return http.StatusInternalServerError, "OPEN_DB_FAILED"
 	}
 	defer db.Close()
+	db.Exec("PRAGMA busy_timeout=30000")
 
 	userEmail := o.session.Get("user_email")
 	stmt, err := db.Prepare("INSERT INTO file_list(file_name, file_size, url_name, version, md5_value, user_email, user_name, desc, create_time, update_time) VALUES(?,?,?,?,?,?,?,?,?,?)")
