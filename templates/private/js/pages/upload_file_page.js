@@ -33,7 +33,7 @@ $(document).ready(function () {
         $('form').ajaxForm({
             dataType: 'json',
             beforeSend: function() {
-                $("#upload_file_progress").removeClass("hidden-self");
+                $("#upload_file_progress").removeClass("no-display");
                 var percentVal = '0%';
                 bar.width(percentVal);
                 percent.html(percentVal);
@@ -50,14 +50,14 @@ $(document).ready(function () {
                     $("#upload_file_form_again").removeClass("no-display");
                 } else {
                     submitting = 0;
-                    $("#upload_file_progress").addClass("hidden-self");
+                    $("#upload_file_progress").addClass("no-display");
                     $("#upload_file_error_label").removeClass("hidden-self");
                     $("#upload_file_error_label").find("span").html("上传失败");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 submitting = 0;
-                $("#upload_file_progress").addClass("hidden-self");
+                $("#upload_file_progress").addClass("no-display");
                 $("#upload_file_error_label").removeClass("hidden-self");
                 $("#upload_file_error_label").find("span").html("上传失败");
             }
@@ -78,14 +78,28 @@ $(document).ready(function () {
         if (this.files.length < 1) {
             return;
         }
+        var file = this.files[0];
 
+        // 清楚错误提示信息
         $("#upload_file_error_label").addClass("hidden-self");
         $("#upload_file_error_label").find("span").html("");
 
-        var file = this.files[0];
-        var length = file.size / 1024.0 / 1024.0;
-        length = length.toFixed(2);
-        var text = "该文件大小为: " + length + "M";
+        // 显示文件名
+        $('#upload-file-info').html(file.name);
+
+        // 计算并显示长度
+        var text = "该文件大小为: ";
+        if (file.size > 1024 * 1024 * 1024) {
+            text += (file.size / 1024.0 / 1024.0 / 1024.0).toFixed(2) + "G";
+        }
+        else if (file.size > 1024 * 1024) {
+            text += (file.size / 1024.0 / 1024.0).toFixed(2) + "M";
+        }
+        else if (file.size > 1024) {
+            text += (file.size / 1024.0).toFixed(2) + "K";
+        } else {
+            text += length + "B";
+        }
         $("#check_file_size_label").html(text);
 
         var file_limit = $("#max_file_limit").val();
