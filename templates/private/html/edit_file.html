@@ -51,17 +51,12 @@
             </li>
         {{if .DownloadRight}}
             <li id="file_list_menu" class="side-bar-condition-hidden side-bar-menu" style="clear: both">
-                <a href="#">文件列表</a>
-            </li>
-        {{end}}
-        {{if  .UploadRight}}
-            <li id="upload_file_menu" class="side-bar-condition-hidden side-bar-menu">
-                <a href="#">上传文件</a>
+                <a href="#">文件管理</a>
             </li>
         {{end}}
         {{if .UserRight}}
             <li id="user_list_menu" class="side-bar-condition-hidden side-bar-menu">
-                <a href="#">用户列表</a>
+                <a href="#">用户管理</a>
             </li>
         {{end}}
         </ul>
@@ -88,6 +83,8 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
